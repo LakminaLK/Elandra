@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB Products API Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .method {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        .get { background-color: #28a745; }
+        .post { background-color: #007bff; }
+        .put { background-color: #ffc107; color: #000; }
+        .delete { background-color: #dc3545; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 5px 5px 0;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .response {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .form-group {
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .status-success { color: #28a745; }
+        .status-error { color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 MongoDB Products API Tester</h1>
+        <p>Test your MongoDB Products REST API endpoints directly from this page.</p>
+
+        <h2>🔍 Public Endpoints (No Authentication Required)</h2>
+        
+        <div class="endpoint">
+            <div>
+                <span class="method get">GET</span>
+                <strong>/api/products</strong> - List all products with filtering
+            </div>
+            <div class="form-group">
+                <label>Category Filter:</label>
+                <input type="text" id="category-filter" placeholder="e.g., Electronics">
+            </div>
+            <div class="form-group">
+                <label>Search Query:</label>
+                <input type="text" id="search-query" placeholder="e.g., smartphone">
+            </div>
+            <button onclick="testGetProducts()">Test Get Products</button>
+            <div id="products-response" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <div>
+                <span class="method get">GET</span>
+                <strong>/api/products/categories</strong> - Get all categories
+            </div>
+            <button onclick="testGetCategories()">Test Get Categories</button>
+            <div id="categories-response" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <div>
+                <span class="method get">GET</span>
+                <strong>/api/products/brands</strong> - Get all brands
+            </div>
+            <button onclick="testGetBrands()">Test Get Brands</button>
+            <div id="brands-response" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <div>
+                <span class="method get">GET</span>
+                <strong>/api/products/stats</strong> - Get product statistics
+            </div>
+            <button onclick="testGetStats()">Test Get Statistics</button>
+            <div id="stats-response" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <div>
+                <span class="method get">GET</span>
+                <strong>/api/products/search</strong> - Search products
+            </div>
+            <div class="form-group">
+                <label>Search Term:</label>
+                <input type="text" id="search-term" placeholder="Enter search term">
+            </div>
+            <button onclick="testSearchProducts()">Test Search</button>
+            <div id="search-response" class="response" style="display:none;"></div>
+        </div>
+
+        <h2>🔐 Admin Endpoints (Authentication Required)</h2>
+        
+        <div class="form-group">
+            <label>Admin Token (for protected endpoints):</label>
+            <input type="text" id="admin-token" placeholder="Enter your Sanctum token here">
+            <small>Get this from your authentication endpoint</small>
+        </div>
+
+        <div class="endpoint">
+            <div>
+                <span class="method post">POST</span>
+                <strong>/api/admin/products</strong> - Create new product
+            </div>
+            <div class="grid">
+                <div>
+                    <div class="form-group">
+                        <label>Product Name:</label>
+                        <input type="text" id="product-name" placeholder="Product name">
+                    </div>
+                    <div class="form-group">
+                        <label>Price:</label>
+                        <input type="number" id="product-price" step="0.01" placeholder="99.99">
+                    </div>
+                    <div class="form-group">
+                        <label>Category:</label>
+                        <input type="text" id="product-category" placeholder="Electronics">
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label>Brand:</label>
+                        <input type="text" id="product-brand" placeholder="Samsung">
+                    </div>
+                    <div class="form-group">
+                        <label>Stock Quantity:</label>
+                        <input type="number" id="product-stock" placeholder="50">
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <textarea id="product-description" rows="3" placeholder="Product description"></textarea>
+                    </div>
+                </div>
+            </div>
+            <button onclick="testCreateProduct()">Test Create Product</button>
+            <div id="create-response" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <div>
+                <span class="method get">GET</span>
+                <strong>/api/products/{id}</strong> - Get single product
+            </div>
+            <div class="form-group">
+                <label>Product ID:</label>
+                <input type="text" id="single-product-id" placeholder="Enter MongoDB ObjectId">
+            </div>
+            <button onclick="testGetSingleProduct()">Test Get Single Product</button>
+            <div id="single-response" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <div>
+                <span class="method put">PUT</span>
+                <strong>/api/admin/products/{id}</strong> - Update product
+            </div>
+            <div class="form-group">
+                <label>Product ID to Update:</label>
+                <input type="text" id="update-product-id" placeholder="Enter MongoDB ObjectId">
+            </div>
+            <div class="form-group">
+                <label>New Price:</label>
+                <input type="number" id="update-price" step="0.01" placeholder="199.99">
+            </div>
+            <button onclick="testUpdateProduct()">Test Update Product</button>
+            <div id="update-response" class="response" style="display:none;"></div>
+        </div>
+
+    </div>
+
+    <script>
+        const BASE_URL = '/api';
+
+        function showResponse(elementId, response, status) {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            const statusClass = status >= 200 && status < 300 ? 'status-success' : 'status-error';
+            element.innerHTML = `<div class="${statusClass}">Status: ${status}</div><pre>${JSON.stringify(response, null, 2)}</pre>`;
+        }
+
+        async function makeRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, options);
+                const data = await response.json();
+                return { data, status: response.status };
+            } catch (error) {
+                return { data: { error: error.message }, status: 0 };
+            }
+        }
+
+        async function testGetProducts() {
+            const category = document.getElementById('category-filter').value;
+            const search = document.getElementById('search-query').value;
+            
+            let url = `${BASE_URL}/products?`;
+            if (category) url += `category=${encodeURIComponent(category)}&`;
+            if (search) url += `search=${encodeURIComponent(search)}&`;
+            
+            const { data, status } = await makeRequest(url);
+            showResponse('products-response', data, status);
+        }
+
+        async function testGetCategories() {
+            const { data, status } = await makeRequest(`${BASE_URL}/products/categories`);
+            showResponse('categories-response', data, status);
+        }
+
+        async function testGetBrands() {
+            const { data, status } = await makeRequest(`${BASE_URL}/products/brands`);
+            showResponse('brands-response', data, status);
+        }
+
+        async function testGetStats() {
+            const { data, status } = await makeRequest(`${BASE_URL}/products/stats`);
+            showResponse('stats-response', data, status);
+        }
+
+        async function testSearchProducts() {
+            const searchTerm = document.getElementById('search-term').value;
+            if (!searchTerm) {
+                alert('Please enter a search term');
+                return;
+            }
+
+            const { data, status } = await makeRequest(`${BASE_URL}/products/search?q=${encodeURIComponent(searchTerm)}`);
+            showResponse('search-response', data, status);
+        }
+
+        async function testGetSingleProduct() {
+            const productId = document.getElementById('single-product-id').value;
+            if (!productId) {
+                alert('Please enter a product ID');
+                return;
+            }
+
+            const { data, status } = await makeRequest(`${BASE_URL}/products/${productId}`);
+            showResponse('single-response', data, status);
+        }
+
+        async function testCreateProduct() {
+            const token = document.getElementById('admin-token').value;
+            if (!token) {
+                alert('Please enter an admin token');
+                return;
+            }
+
+            const productData = {
+                name: document.getElementById('product-name').value,
+                price: parseFloat(document.getElementById('product-price').value),
+                category: document.getElementById('product-category').value,
+                brand: document.getElementById('product-brand').value,
+                stock_quantity: parseInt(document.getElementById('product-stock').value),
+                description: document.getElementById('product-description').value
+            };
+
+            const { data, status } = await makeRequest(`${BASE_URL}/admin/products`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(productData)
+            });
+
+            showResponse('create-response', data, status);
+        }
+
+        async function testUpdateProduct() {
+            const token = document.getElementById('admin-token').value;
+            const productId = document.getElementById('update-product-id').value;
+            const newPrice = document.getElementById('update-price').value;
+
+            if (!token) {
+                alert('Please enter an admin token');
+                return;
+            }
+            if (!productId) {
+                alert('Please enter a product ID');
+                return;
+            }
+
+            const updateData = {};
+            if (newPrice) updateData.price = parseFloat(newPrice);
+
+            const { data, status } = await makeRequest(`${BASE_URL}/admin/products/${productId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(updateData)
+            });
+
+            showResponse('update-response', data, status);
+        }
+    </script>
+</body>
+</html>

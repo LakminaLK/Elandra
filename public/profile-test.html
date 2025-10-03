@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
+            <h1 class="text-2xl font-bold text-center mb-6">Profile Page Test</h1>
+            
+            <div class="space-y-4">
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                    <h3 class="font-semibold">✅ Profile System Status</h3>
+                    <p class="text-sm">Jetstream stack changed to Livewire</p>
+                    <p class="text-sm">Conflicting Fortify features disabled</p>
+                    <p class="text-sm">Custom profile controller active</p>
+                </div>
+                
+                <div class="space-y-2">
+                    <a href="http://127.0.0.1:8000/login" 
+                       class="block w-full bg-blue-600 text-white text-center py-2 px-4 rounded hover:bg-blue-700 transition">
+                        1. Login First
+                    </a>
+                    
+                    <a href="http://127.0.0.1:8000/profile" 
+                       class="block w-full bg-green-600 text-white text-center py-2 px-4 rounded hover:bg-green-700 transition">
+                        2. Test Profile Page
+                    </a>
+                    
+                    <a href="http://127.0.0.1:8000/" 
+                       class="block w-full bg-purple-600 text-white text-center py-2 px-4 rounded hover:bg-purple-700 transition">
+                        3. Go to Homepage
+                    </a>
+                </div>
+                
+                <div class="bg-blue-50 p-4 rounded">
+                    <h4 class="font-semibold text-blue-800">Next Steps:</h4>
+                    <ol class="text-blue-700 text-sm list-decimal list-inside space-y-1">
+                        <li>Login with your account</li>
+                        <li>Navigate to profile page</li>
+                        <li>Test profile updates</li>
+                        <li>Test password changes</li>
+                        <li>Test photo upload</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

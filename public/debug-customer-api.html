@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Customer API Debug - Elandra</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .debug-box { background: white; border-radius: 8px; padding: 20px; margin: 15px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .success { border-left: 4px solid #10b981; }
+        .error { border-left: 4px solid #ef4444; }
+        .info { border-left: 4px solid #3b82f6; }
+        .warning { border-left: 4px solid #f59e0b; }
+        pre { background: #f8f9fa; padding: 15px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+        button { padding: 10px 20px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .btn-primary { background: #3b82f6; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        #results { margin-top: 20px; }
+        .loading { display: inline-block; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Customer API Debug Tool</h1>
+        
+        <div class="debug-box info">
+            <h3>🎯 Debug Session Started</h3>
+            <p>This tool will help diagnose why the customer page is stuck on loading...</p>
+            <p><strong>Current URL:</strong> <span id="currentUrl"></span></p>
+            <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
+            <p><strong>CSRF Token:</strong> <span id="csrfToken"></span></p>
+        </div>
+
+        <div class="debug-box">
+            <h3>🔧 Manual Tests</h3>
+            <button class="btn-primary" onclick="testAxiosAvailable()">1. Check Axios</button>
+            <button class="btn-primary" onclick="testCSRFToken()">2. Check CSRF</button>
+            <button class="btn-warning" onclick="testApiEndpoint()">3. Test API Call</button>
+            <button class="btn-success" onclick="testAuthStatus()">4. Check Auth</button>
+            <button class="btn-danger" onclick="runFullDiagnostic()">🚀 Full Diagnostic</button>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // Initialize page info
+        document.getElementById('currentUrl').textContent = window.location.href;
+        document.getElementById('userAgent').textContent = navigator.userAgent;
+        
+        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : 'NOT FOUND';
+        document.getElementById('csrfToken').textContent = csrfToken;
+
+        function logResult(title, content, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `debug-box ${type}`;
+            div.innerHTML = `
+                <h4>${title}</h4>
+                <pre>${typeof content === 'object' ? JSON.stringify(content, null, 2) : content}</pre>
+            `;
+            results.appendChild(div);
+        }
+
+        function testAxiosAvailable() {
+            if (window.axios) {
+                logResult('✅ Axios Available', `Axios version: ${axios.VERSION || 'Unknown'}\nAxios object: ${typeof axios}`, 'success');
+            } else {
+                logResult('❌ Axios Not Available', 'window.axios is undefined', 'error');
+            }
+        }
+
+        function testCSRFToken() {
+            if (csrfToken && csrfToken !== 'NOT FOUND') {
+                logResult('✅ CSRF Token Found', `Token: ${csrfToken}\nLength: ${csrfToken.length} characters`, 'success');
+            } else {
+                logResult('❌ CSRF Token Missing', 'meta[name="csrf-token"] not found in page head', 'error');
+            }
+        }
+
+        async function testApiEndpoint() {
+            try {
+                logResult('🔄 Testing API Endpoint...', 'Making request to /api/admin/customers', 'info');
+                
+                // Configure axios
+                if (window.axios && csrfToken) {
+                    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
+                    window.axios.defaults.headers.common['Accept'] = 'application/json';
+                    window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+                }
+                
+                const response = await axios.get('/api/admin/customers');
+                
+                logResult('✅ API Response Success', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: response.headers,
+                    data: response.data
+                }, 'success');
+                
+            } catch (error) {
+                logResult('❌ API Request Failed', {
+                    message: error.message,
+                    status: error.response?.status,
+                    statusText: error.response?.statusText,
+                    data: error.response?.data,
+                    config: error.config
+                }, 'error');
+            }
+        }
+
+        async function testAuthStatus() {
+            try {
+                logResult('🔄 Checking Auth Status...', 'Making request to /admin/debug-auth', 'info');
+                
+                const response = await fetch('/admin/debug-auth', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                
+                const data = await response.text();
+                
+                logResult('Auth Status Response', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    contentType: response.headers.get('content-type'),
+                    data: data
+                }, response.ok ? 'success' : 'error');
+                
+            } catch (error) {
+                logResult('❌ Auth Check Failed', error.message, 'error');
+            }
+        }
+
+        async function runFullDiagnostic() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<div class="debug-box info"><h4>🚀 Running Full Diagnostic...</h4></div>';
+            
+            await new Promise(resolve => setTimeout(resolve, 500));
+            testAxiosAvailable();
+            
+            await new Promise(resolve => setTimeout(resolve, 500));
+            testCSRFToken();
+            
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testAuthStatus();
+            
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testApiEndpoint();
+            
+            logResult('📊 Diagnostic Complete', 'All tests finished. Check results above for issues.', 'info');
+        }
+
+        // Auto-run basic checks on load
+        setTimeout(() => {
+            logResult('🎯 Auto-Diagnostic Started', 'Running basic checks...', 'info');
+            testAxiosAvailable();
+            testCSRFToken();
+        }, 1000);
+    </script>
+</body>
+</html>
