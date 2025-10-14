@@ -32,7 +32,7 @@ class CustomerApiController extends Controller
                 $query->where(function($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%")
                       ->orWhere('email', 'LIKE', "%{$search}%")
-                      ->orWhere('phone', 'LIKE', "%{$search}%");
+                      ->orWhere('mobile', 'LIKE', "%{$search}%");
                 });
             }
 
@@ -59,7 +59,7 @@ class CustomerApiController extends Controller
                     'id' => $customer->id,
                     'name' => $customer->name,
                     'email' => $customer->email,
-                    'phone' => $customer->phone ?? 'N/A',
+                    'phone' => $customer->mobile ?? 'N/A',
                     'is_active' => $customer->is_active,
                     'status' => $customer->is_active ? 'Active' : 'Inactive',
                     'orders_count' => 0, // You can implement this later if needed
@@ -119,6 +119,12 @@ class CustomerApiController extends Controller
             $validated['password'] = Hash::make($validated['password']);
             $validated['email_verified_at'] = now();
             $validated['is_active'] = true;
+            
+            // Map phone to mobile field
+            if (isset($validated['phone'])) {
+                $validated['mobile'] = $validated['phone'];
+                unset($validated['phone']);
+            }
 
             $customer = User::create($validated);
 
@@ -134,7 +140,7 @@ class CustomerApiController extends Controller
                     'id' => $customer->id,
                     'name' => $customer->name,
                     'email' => $customer->email,
-                    'phone' => $customer->phone ?? 'N/A',
+                    'phone' => $customer->mobile ?? 'N/A',
                     'is_active' => $customer->is_active,
                     'status' => $customer->is_active ? 'Active' : 'Inactive',
                     'created_at' => $customer->created_at->format('Y-m-d')
@@ -174,7 +180,7 @@ class CustomerApiController extends Controller
                     'id' => $customer->id,
                     'name' => $customer->name,
                     'email' => $customer->email,
-                    'phone' => $customer->phone ?? 'N/A',
+                    'phone' => $customer->mobile ?? 'N/A',
                     'is_active' => $customer->is_active,
                     'status' => $customer->is_active ? 'Active' : 'Inactive',
                     'created_at' => $customer->created_at->format('Y-m-d'),
@@ -216,6 +222,12 @@ class CustomerApiController extends Controller
             } else {
                 unset($validated['password']);
             }
+            
+            // Map phone to mobile field
+            if (isset($validated['phone'])) {
+                $validated['mobile'] = $validated['phone'];
+                unset($validated['phone']);
+            }
 
             $customer->update($validated);
 
@@ -231,7 +243,7 @@ class CustomerApiController extends Controller
                     'id' => $customer->id,
                     'name' => $customer->name,
                     'email' => $customer->email,
-                    'phone' => $customer->phone ?? 'N/A',
+                    'phone' => $customer->mobile ?? 'N/A',
                     'is_active' => $customer->is_active,
                     'status' => $customer->is_active ? 'Active' : 'Inactive'
                 ]

@@ -36,21 +36,6 @@
         </div>
     </div>
 
-
-
-    <!-- API Status Banner -->
-    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-        <div class="flex items-center">
-            <svg class="w-5 h-5 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-            </svg>
-            <div class="text-sm">
-                <p class="font-medium text-blue-800">API-Driven Customer Management</p>
-                <p class="text-blue-600">All data is loaded dynamically from the backend API (/api/admin/customers)</p>
-            </div>
-        </div>
-    </div>
-
     <!-- Loading State -->
     <div id="loadingState" class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
         <div class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-gray-500 bg-white">

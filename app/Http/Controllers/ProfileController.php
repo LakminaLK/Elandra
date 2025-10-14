@@ -32,8 +32,6 @@ class ProfileController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . Auth::id(),
-            'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
             'city' => 'nullable|string|max:100',
             'country' => 'nullable|string|max:100',
@@ -46,8 +44,6 @@ class ProfileController extends Controller
         $user = Auth::user();
         $user->update([
             'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
             'address' => $request->address,
             'city' => $request->city,
             'country' => $request->country,
@@ -84,54 +80,55 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update mobile number
-     */
-    public function updateMobile(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'phone' => 'required|string|max:20|unique:users,phone,' . Auth::id(),
-        ]);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator, 'mobile');
-        }
-
-        $user = Auth::user();
-        $user->update([
-            'phone' => $request->phone,
-        ]);
-
-        return back()->with('mobile_success', 'Mobile number updated successfully!');
-    }
-
-    /**
      * Upload profile photo
      */
     public function uploadPhoto(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'profile_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'profile_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            ]);
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator, 'photo');
+            if ($validator->fails()) {
+                return back()->withErrors($validator, 'photo')->withInput();
+            }
+
+            $user = Auth::user();
+
+            // Check if file was uploaded
+            if (!$request->hasFile('profile_photo')) {
+                return back()->withErrors(['profile_photo' => 'No file was uploaded.'], 'photo');
+            }
+
+            $file = $request->file('profile_photo');
+            
+            // Check if file is valid
+            if (!$file->isValid()) {
+                return back()->withErrors(['profile_photo' => 'The uploaded file is invalid.'], 'photo');
+            }
+
+            // Delete old profile photo if exists
+            if ($user->profile_photo_path && Storage::exists('public/' . $user->profile_photo_path)) {
+                Storage::delete('public/' . $user->profile_photo_path);
+            }
+
+            // Store new profile photo
+            $photoPath = $file->store('profile-photos', 'public');
+
+            if (!$photoPath) {
+                return back()->withErrors(['profile_photo' => 'Failed to store the uploaded file.'], 'photo');
+            }
+
+            // Update user record
+            $user->update([
+                'profile_photo_path' => $photoPath,
+            ]);
+
+            return back()->with('photo_success', 'Profile photo updated successfully!');
+            
+        } catch (\Exception $e) {
+            return back()->withErrors(['profile_photo' => 'An error occurred during upload. Please try again.'], 'photo');
         }
-
-        $user = Auth::user();
-
-        // Delete old profile photo if exists
-        if ($user->profile_photo_path && Storage::exists('public/' . $user->profile_photo_path)) {
-            Storage::delete('public/' . $user->profile_photo_path);
-        }
-
-        // Store new profile photo
-        $photoPath = $request->file('profile_photo')->store('profile-photos', 'public');
-
-        $user->update([
-            'profile_photo_path' => $photoPath,
-        ]);
-
-        return back()->with('photo_success', 'Profile photo updated successfully!');
     }
 
     /**

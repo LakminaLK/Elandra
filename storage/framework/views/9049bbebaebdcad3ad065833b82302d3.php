@@ -114,158 +114,22 @@
 
 
 <!-- Featured Products -->
-<?php if($featuredProducts->count() > 0): ?>
-<section class="py-20 bg-gradient-to-b from-slate-50 to-white" id="featured">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16" data-aos="fade-up">
-            <div class="inline-flex items-center bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                <i class="fas fa-star mr-2"></i>
-                Featured
-            </div>
-            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Featured Products</h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                Discover our handpicked selection of the finest luxury handbags, crafted with exceptional attention to detail.
-            </p>
-        </div>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <?php $__currentLoopData = $featuredProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <div class="product-card group bg-white rounded-xl shadow-sm hover:shadow-lg border border-gray-200 overflow-hidden transition-shadow duration-300 flex flex-col h-full" data-aos="fade-up" data-aos-delay="<?php echo e($loop->index * 100); ?>">
-                
-                
-                <div class="relative aspect-square overflow-hidden bg-gray-50 flex-shrink-0">
-                    <a href="<?php echo e(route('products.show', $product->slug ?? $product->_id)); ?>" 
-                       class="block w-full h-full">
-                        <?php if(isset($product->images) && is_array($product->images) && count($product->images) > 0): ?>
-                            <img src="<?php echo e(Storage::url($product->images[0])); ?>" 
-                                 alt="<?php echo e($product->name); ?>" 
-                                 class="w-full h-full object-cover"
-                                 loading="lazy">
-                        <?php else: ?>
-                            <div class="w-full h-full flex items-center justify-center">
-                                <i class="fas fa-image text-5xl text-gray-300"></i>
-                            </div>
-                        <?php endif; ?>
-                    </a>
-                    
-                    
-                    <div class="absolute top-3 left-3 flex flex-col space-y-1">
-                        <?php if(isset($product->is_featured) && $product->is_featured): ?>
-                            <span class="bg-blue-600 text-white text-xs px-2 py-1 rounded font-medium shadow-sm">
-                                Featured
-                            </span>
-                        <?php endif; ?>
-                        <?php if(isset($product->stock_quantity) && $product->stock_quantity <= 5 && $product->stock_quantity > 0): ?>
-                            <span class="bg-orange-500 text-white text-xs px-2 py-1 rounded font-medium shadow-sm">
-                                Only <?php echo e($product->stock_quantity); ?> left
-                            </span>
-                        <?php endif; ?>
-                        <?php if(isset($product->stock_quantity) && $product->stock_quantity <= 0): ?>
-                            <span class="bg-red-500 text-white text-xs px-2 py-1 rounded font-medium shadow-sm">
-                                Sold Out
-                            </span>
-                        <?php endif; ?>
-                    </div>
+<?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('featured-products');
 
-                    
-                    <button class="absolute top-3 right-3 w-8 h-8 bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full flex items-center justify-center text-gray-500 hover:text-red-500 transition-all duration-200 shadow-sm">
-                        <i class="fas fa-heart text-sm"></i>
-                    </button>
-                </div>
+$__html = app('livewire')->mount($__name, $__params, 'lw-1008348124-0', $__slots ?? [], get_defined_vars());
 
-                
-                <div class="p-5 flex flex-col h-full">
-                    
-                    <div class="flex items-center space-x-2 mb-3 min-h-[24px]">
-                        <?php if($product->category): ?>
-                            <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-medium">
-                                <?php echo e(ucfirst($product->category)); ?>
+echo $__html;
 
-                            </span>
-                        <?php endif; ?>
-                        <?php if($product->brand): ?>
-                            <span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-medium">
-                                <?php echo e(ucfirst($product->brand)); ?>
-
-                            </span>
-                        <?php endif; ?>
-                    </div>
-
-                    
-                    <div class="mb-4 flex-grow">
-                        <h3 class="font-medium text-lg text-gray-900 line-clamp-2 leading-tight h-[3.5rem] overflow-hidden">
-                            <a href="<?php echo e(route('products.show', $product->slug ?? $product->_id)); ?>" 
-                               class="hover:text-blue-600 transition-colors duration-200">
-                                <?php echo e($product->name); ?>
-
-                            </a>
-                        </h3>
-                    </div>
-
-                    
-                    <div class="mb-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="text-2xl font-semibold text-gray-900">
-                                $<?php echo e(number_format($product->price, 2)); ?>
-
-                            </div>
-                        </div>
-                        <div class="min-h-[20px]">
-                            <?php if(isset($product->stock_quantity)): ?>
-                                <?php if($product->stock_quantity > 0): ?>
-                                    <div class="text-sm text-green-600 font-medium">
-                                        <i class="fas fa-check-circle mr-1"></i>
-                                        In Stock
-                                    </div>
-                                <?php else: ?>
-                                    <div class="text-sm text-red-600 font-medium">
-                                        <i class="fas fa-times-circle mr-1"></i>
-                                        Out of Stock
-                                    </div>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-
-                    
-                    <div class="mt-auto">
-                        <?php if(!isset($product->stock_quantity) || $product->stock_quantity > 0): ?>
-                            <?php if(auth()->guard()->check()): ?>
-                                <button onclick="addToCart('<?php echo e($product->_id); ?>')" 
-                                        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-2 group">
-                                    <i class="fas fa-shopping-bag text-sm"></i>
-                                    <span>Add to Cart</span>
-                                </button>
-                            <?php else: ?>
-                                <a href="<?php echo e(route('login')); ?>" 
-                                   class="w-full bg-gray-600 hover:bg-gray-700 text-white py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-2">
-                                    <i class="fas fa-sign-in-alt text-sm"></i>
-                                    <span>Login to Buy</span>
-                                </a>
-                            <?php endif; ?>
-                        <?php else: ?>
-                            <button disabled 
-                                    class="w-full bg-gray-300 text-gray-500 py-3 rounded-lg font-medium cursor-not-allowed flex items-center justify-center space-x-2">
-                                <i class="fas fa-times-circle text-sm"></i>
-                                <span>Out of Stock</span>
-                            </button>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-        </div>
-        
-        <div class="text-center mt-12" data-aos="fade-up">
-            <a href="<?php echo e(route('products.index')); ?>" class="inline-flex items-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl">
-                <i class="fas fa-store mr-3"></i>
-                View All Products
-                <i class="fas fa-arrow-right ml-3"></i>
-            </a>
-        </div>
-    </div>
-</section>
-<?php endif; ?>
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
 
 <!-- Testimonials Section -->
 <section class="py-20 bg-gradient-to-b from-white to-gray-50" data-aos="fade-up">

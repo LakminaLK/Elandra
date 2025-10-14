@@ -1,0 +1,498 @@
+{
+    "exported_at": "2025-10-14T20:44:55.593247Z",
+    "database": "elandra_products",
+    "collections": {
+        "products": [
+            {
+                "name": "Mini GG Marmont bag with cardholder",
+                "description": "Gucci\nmini GG Marmont bag with cardholder\n\nMade in Italy\n\nHighlights\nbeige\npress-stud fastening\ncable-link chain\nmain compartment\nrectangle shape\nComposition\nOuter: Calf Leather 100%",
+                "price": "980.00",
+                "category": "Clutch Bag",
+                "brand": "Gucci",
+                "stock_quantity": 0,
+                "sku": "MINI-GG-MARMONT-BAG-WITH-CARDHOLDER",
+                "is_active": true,
+                "is_featured": true,
+                "images": [
+                    "products\/main\/eWzFqGQ3NPwnnfNcsFBhvK8uWWyPlfkU8hWGwtOr.webp",
+                    "products\/additional\/8soRT0MhdS7xLPFf0x8ylNKEWeTf8CtXbuuk7T0C.webp",
+                    "products\/additional\/zz4AZPXHqBtDk4AGEEzzREo9vCxDGveiBi5OZthG.webp",
+                    "products\/additional\/sFhzUL9VnBe0duRIkVivoAFOTj578Cu6eEaX9b9t.webp"
+                ],
+                "slug": "mini-gg-marmont-bag-with-cardholder",
+                "created_by": null,
+                "updated_at": "2025-10-03T09:27:48.179000Z",
+                "created_at": "2025-10-02T21:04:56.309000Z",
+                "updated_by": null,
+                "id": "68dee8f869080b34830a2dd6"
+            },
+            {
+                "name": "Dionysus GG Supreme wallet-on-chain",
+                "description": "Gucci\nDionysus GG Supreme wallet-on-chain\n\nMade in Italy\n\nHighlights\nbeige\/taupe brown\ncanvas\nGG Supreme canvas\nfoldover top with press-stud fastening\nTiger head spur detailing\ndetachable chain-link shoulder strap\ndebossed internal logo\ninternal card slots\ninternal zip-fastening pocket\nComposition\nOuter: Canvas 100%, Metal 100%, Calf Leather 100%\n\nLining: Calf Leather 100%, RDS Product Name: BLACK ORCHID EDP Division: TF (TOM FORD BEAUTY) ALCOHOL DENAT. 100%",
+                "price": "1200.00",
+                "category": "Clutch Bag",
+                "brand": "Gucci",
+                "stock_quantity": 2,
+                "sku": "DIONYSUS-GG-SUPREME-WALLET-ON-CHAIN",
+                "is_active": true,
+                "is_featured": true,
+                "images": [
+                    "products\/main\/4FYAEdyMgFZe4RbT5sHLuyLaqbtdyHodnowqst4H.webp",
+                    "products\/additional\/QwsF0LmxqVWpQsfL5zlhYAt3z5GahLEYI78ysSbk.webp",
+                    "products\/additional\/1CoyaG8cn5mbzIGwrOjKjTmfYgn0eIGeVK0tdS4k.webp",
+                    "products\/additional\/VDGyiiY2apoMLmBHgyoHmEY2b5OTYJlVAXpN6MVk.webp",
+                    "products\/additional\/1NBDkbdXAatj1gc2wQUTkqS8JdAdH4AFfl7RZSc5.webp"
+                ],
+                "slug": "dionysus-gg-supreme-wallet-on-chain",
+                "created_by": null,
+                "updated_at": "2025-10-03T07:36:58.928000Z",
+                "created_at": "2025-10-02T21:10:13.658000Z",
+                "updated_by": null,
+                "id": "68deea3569080b34830a2dd7"
+            },
+            {
+                "name": "Mini Dionysus leather clutch bag",
+                "description": "Gucci\nmini Dionysus leather clutch bag\n\nNeed more proof that the best things in life come in the smallest of packages? This mini Dionysus wallet-on-chain from Gucci might just be what Shakespeare had in mind when he wrote: 'though she be but little, she is fierce.' It packs a punch - and your favourite lipstick.\n\nMade in Italy\n\nHighlights\nblack\nleather\ngrained texture\nsignature Tiger Head motif\nsilver-tone hardware\ndetachable chain-link shoulder strap\nfoldover top with press-stud fastening\npartitioned compartment\ninternal card slots\ninternal zip-fastening pocket\nComposition\nOuter: Metal 100%, Calf Leather 100%\n\nWearing\nThe model is 1.78 m wearing size OS",
+                "price": "360.00",
+                "category": "Clutch Bag",
+                "brand": "Gucci",
+                "stock_quantity": 5,
+                "sku": "MINI-DIONYSUS-LEATHER-CLUTCH-BAG",
+                "is_active": true,
+                "is_featured": true,
+                "images": [
+                    "products\/main\/fXkiLQLbprMgiPIGRVErjfR48iaxCxi7QrJVVY5r.webp",
+                    "products\/additional\/BLfWtCcTHiTqgP4PIHnot2RZs06DLoq7z3xAq8Nr.webp",
+                    "products\/additional\/bIyjvaVC0jInHQSjkkqHtLkxhcEdOBLp3DT3T5yh.webp",
+                    "products\/additional\/CaCWz53wYWAVo2NyynCp8b3eqz4TFRUGwuefARqw.webp",
+                    "products\/additional\/XMj4OBBBKvBpxKGXx0t1Fv7f0nhTdvkY3IIVFMaz.webp"
+                ],
+                "slug": "mini-dionysus-leather-clutch-bag",
+                "created_by": null,
+                "updated_at": "2025-10-03T07:36:58.930000Z",
+                "created_at": "2025-10-02T21:12:02.218000Z",
+                "updated_by": null,
+                "id": "68deeaa269080b34830a2dd8"
+            },
+            {
+                "name": "2021 Quilted Lambskin Leather Chain and Charm Case vanity bag",
+                "description": "CHANEL Pre-Owned\n2021 Quilted Lambskin Leather Chain and Charm Case vanity bag\n\nMade in France\n\nHighlights\nquilted lambskin leather body\nleather woven chain link shoulder strap\nzip-around closure with charm\nwhite\nSerial Number: 31182923\nThis item has no inclusions.\nCondition: EXCELLENT. This previously owned item is in near-perfect condition with no signs of damage or use.\nPlease refer to the photos on this product page for a detailed view of the item, including any damages declared.\nComposition\nOuter: Lambskin 100%",
+                "price": "3100.00",
+                "category": "Clutch Bag",
+                "brand": "Chanel",
+                "stock_quantity": 1,
+                "sku": "2021-QUILTED-LAMBSKIN-LEATHER-CHAIN-AND-CHARM-CASE-VANITY-BAG",
+                "is_active": true,
+                "is_featured": true,
+                "images": [
+                    "products\/main\/ZGUeupvZajvuZ3F9iWmAcP0T3k7KnFDwFpdRIoNQ.webp",
+                    "products\/additional\/UxMmFS8zkhd1hqMk0YZ5XgriyXNYufcRkzhbBIpc.webp",
+                    "products\/additional\/0zt1IpiQubmrrGLzli9EK0Jsh0gWE8BidN7LJNRI.webp",
+                    "products\/additional\/W8oKOnzxqzakSFB8C2SNIoXc0I8MeMrT2XFn0gFB.webp",
+                    "products\/additional\/AMdEAovO3GSUdZ1GhpGcA90ZEQklq88qlGCIVNxv.webp"
+                ],
+                "slug": "2021-quilted-lambskin-leather-chain-and-charm-case-vanity-bag",
+                "created_by": null,
+                "updated_at": "2025-10-14T15:24:17.839000Z",
+                "created_at": "2025-10-02T21:16:50.030000Z",
+                "updated_by": null,
+                "id": "68deebc269080b34830a2dd9"
+            },
+            {
+                "name": "2016-2017 CC Stitched Lambskin clutch bag",
+                "description": "CHANEL Pre-Owned\n2016-2017 CC Stitched Lambskin clutch bag\n\nMade in Italy\n\nHighlights\nlambskin leather body\ntop zip closure\nblack\nSerial Number: 22240249\nThis item has no inclusions.\nCondition: EXCELLENT. This previously owned item is in near-perfect condition with no signs of damage or use.\nPlease refer to the photos on this product page for a detailed view of the item, including any damages declared.\nComposition\nOuter: Lambskin 100%",
+                "price": "1400.00",
+                "category": "Clutch Bag",
+                "brand": "Chanel",
+                "stock_quantity": 1,
+                "sku": "2016-2017-CC-STITCHED-LAMBSKIN-CLUTCH-BAG",
+                "is_active": true,
+                "is_featured": true,
+                "images": [
+                    "products\/main\/GgPj1N8JqE4hDVguFUkF6C7wD3VVWiafNVcpp7ft.webp",
+                    "products\/additional\/Xw9n4pSrz0EpSZ0OXxcdD8MImsS8nEyXuI38h7Ah.webp",
+                    "products\/additional\/3DvYmynBs4gl1KVcUMqFSPvE7fUaAkOVvhDbm0Zm.webp",
+                    "products\/additional\/9VuiKIWfM1sjnOU9iFYqtkq7daSYng6gXYMLkGro.webp",
+                    "products\/additional\/4z1JfUiyxIgHtOU19hM5OdDav6JvL49G746263m3.webp"
+                ],
+                "slug": "2016-2017-cc-stitched-lambskin-clutch-bag",
+                "created_by": null,
+                "updated_at": "2025-10-03T07:36:58.932000Z",
+                "created_at": "2025-10-02T21:18:05.963000Z",
+                "updated_by": null,
+                "id": "68deec0d69080b34830a2dda"
+            },
+            {
+                "name": "1989 Classic Flap elongated clutch bag",
+                "description": "CHANEL Pre-Owned\n1989 Classic Flap elongated clutch bag\n\nMade in France\n\nHighlights\ncirca 1989\nblack\nlambskin\ndiamond quilting\nfront flap closure\nsignature interlocking CC turn-lock fastening\ncontrast lining\ngold-tone hardware\nSerial number: 1614220\nThis item comes with an original authenticity seal.\nCondition: GOOD. This previously owned and used item is in good condition with minimal signs of use. This may include fading of material or plating and scratches.\nComposition\nOuter: Lambskin 100%\n\nWashing instructions\nRead Manufacturer Guidelines",
+                "price": "2300.00",
+                "category": "Clutch Bag",
+                "brand": "Chanel",
+                "stock_quantity": 3,
+                "sku": "1989-CLASSIC-FLAP-ELONGATED-CLUTCH-BAG",
+                "is_active": true,
+                "is_featured": true,
+                "images": [
+                    "products\/main\/Xgeo60N0pPAggwD6pHxeY8febX1OdpxTSVFFyJ7T.webp",
+                    "products\/additional\/Ck95H7TbOplfOKwSb7VyvIvUFfzOdN6tYnpEkNXY.webp",
+                    "products\/additional\/Jgbx9DepcGbo3AHCSSyehqRRmEbliAb1fNJ98Evh.webp",
+                    "products\/additional\/6oypWi9SFOTHhNYNlRtfc0DwHotH1DMTf2MFQ6IF.webp"
+                ],
+                "slug": "1989-classic-flap-elongated-clutch-bag",
+                "created_by": null,
+                "updated_at": "2025-10-03T07:36:58.932000Z",
+                "created_at": "2025-10-02T21:19:02.179000Z",
+                "updated_by": null,
+                "id": "68deec4669080b34830a2ddb"
+            },
+            {
+                "name": "large Puffy Pouch clutch bag",
+                "description": "Saint Laurent\nlarge Puffy Pouch clutch bag\n\nMade in Italy\n\nHighlights\nblack\nleather\ngrained texture\ndebossed logo to the front\nmain compartment\ninternal slip pocket\ninternal logo stamp\ninternal card slots\ntop zip fastening\nComposition\nOuter: Leather 100%\n\nWearing\nThe model is 1.87 m wearing size OS",
+                "price": "1490.00",
+                "category": "Clutch Bag",
+                "brand": "Saint Laurent",
+                "stock_quantity": 4,
+                "sku": "LARGE-PUFFY-POUCH-CLUTCH-BAG",
+                "is_active": true,
+                "is_featured": false,
+                "images": [
+                    "products\/main\/UdJyVQgKiRPpyfexWgZYTFIaVW0FsNho76ZT6EAz.webp",
+                    "products\/additional\/LRf1KgOvWOSbbQzsSCNpAVKEMFYsy0wJtwhA2Y2r.webp",
+                    "products\/additional\/VLhOOwWfxsrcNXIeDS3RFDtwp0SlsJsGRB7BvpCd.webp",
+                    "products\/additional\/0uDVrUQDNI7AUNbdkq0FpiNH5IXgayzFmDFLI8I1.webp",
+                    "products\/additional\/kxaUdLTB0YSYlz9sbhWOsGk9AUBpXBoHvafey3eZ.webp"
+                ],
+                "slug": "large-puffy-pouch-clutch-bag",
+                "created_by": null,
+                "updated_at": "2025-10-02T21:25:13.098000Z",
+                "created_at": "2025-10-02T21:25:13.098000Z",
+                "id": "68deedb969080b34830a2ddc"
+            },
+            {
+                "name": "Cassandre envelope pouch",
+                "description": "Saint Laurent\nCassandre envelope pouch\n\nFirst designed in 1962 by French artist Cassandre, the YSL monogram logo has become an iconic symbol in the fashion world, instantly recognisable as Saint Laurent's signature. Appearing here in a gold-tone, it embellishes the front of this envelope clutch for a refined and unmistakable look.\n\nMade in Italy\n\nHighlights\nblack\nlambskin\nsignature Cassandre logo plaque\ngold-tone logo plaque\nenvelope design\nfoldover top with magnetic fastening\nmain compartment\nComposition\nOuter: Lambskin 90%, Metal 10%\n\nWearing\nThe model is 1.77 m wearing size OS",
+                "price": "2800.00",
+                "category": "Clutch Bag",
+                "brand": "Saint Laurent",
+                "stock_quantity": 9,
+                "sku": "CASSANDRE-ENVELOPE-POUCH",
+                "is_active": true,
+                "is_featured": false,
+                "images": [
+                    "products\/main\/gO5ktbg7JgVmZMlwp1MVxYCqADHxA8bNqWyrgr7D.webp",
+                    "products\/additional\/T9PEQ0AYPjFpSuevkECS82SPHWQ7UKFafs7EZbpe.webp",
+                    "products\/additional\/9mhb4ffDMPCDCLb23YFvVmRshW78aHZ9wn9eyDyv.webp",
+                    "products\/additional\/5VicAUsZOEwPqsHreuMyinC5a1YlPF7sbeVQThqB.webp",
+                    "products\/additional\/4wuqPSdrm7kSy0oykn0rE9zy1jUFiZCnYLbElNR4.webp"
+                ],
+                "slug": "cassandre-envelope-pouch",
+                "created_by": null,
+                "updated_at": "2025-10-14T16:19:07.879000Z",
+                "created_at": "2025-10-02T21:26:05.424000Z",
+                "updated_by": null,
+                "id": "68deeded69080b34830a2ddd"
+            },
+            {
+                "name": "Cassandre clutch bag",
+                "description": "Saint Laurent\nCassandre clutch bag\n\nNeed more proof that the best gifts in life come in the smallest of packages? This monogram wallet on chain from Saint Laurent might just be what Shakespeare had in mind when he wrote: 'though she be but little, she is fierce.' It packs a punch - and your favourite lipstick.\n\nMade in Italy\n\nHighlights\nblack\nleather\nchevron quilting\ndetachable chain-link shoulder strap\nfoldover top\nsignature Cassandre logo plaque\nmain compartment\ninternal zip-fastening pocket\ninternal logo stamp\ninternal card slots\nmagnetic fastening\nComposition\nOuter: Calf Leather 100%\n\nWearing\nThe model is 1.78 m wearing size OS",
+                "price": "2100.00",
+                "category": "Clutch Bag",
+                "brand": "Saint Laurent",
+                "stock_quantity": 6,
+                "sku": "CASSANDRE-CLUTCH-BAG",
+                "is_active": true,
+                "is_featured": false,
+                "images": [
+                    "products\/main\/uxodBp8DoCRsD23AvfcL7pFKlCbp951Hee6u0aiU.webp",
+                    "products\/additional\/x4kmTbkh1V5MkSHVsjlafWAF1Typ1w5e6hYBQVlo.webp",
+                    "products\/additional\/COQCv3xDMeI3JrPyrM1h42PM5Pgn1Ngv2jWV53ut.webp",
+                    "products\/additional\/Y2OqQRIGLhzZ6nTWl82hjYok4kRyHVSuGog0bKub.webp",
+                    "products\/additional\/P6uajXucpBU6FG1r721vDvCXJE0Cca6u4Fy0uF8R.webp"
+                ],
+                "slug": "cassandre-clutch-bag",
+                "created_by": null,
+                "updated_at": "2025-10-02T21:27:22.541000Z",
+                "created_at": "2025-10-02T21:27:22.541000Z",
+                "id": "68deee3a69080b34830a2dde"
+            },
+            {
+                "name": "2021-2022 matelass\u00e9 tote bag",
+                "description": "CHANEL Pre-Owned\n2021-2022 matelass\u00e9 tote bag\n\nMade in Italy\n\nHighlights\ncirca 2021-2022\nblack\ncaviar leather\nmatelass\u00e9 effect\nsingle top handle\nleather and chain-link shoulder strap\nall-around zip fastening\nsignature interlocking CC logo\nmain compartment\ninternal logo patch\ngold-tone hardware\nSerial Number: 31832290\nThis item comes with an original Chanel authenticity card.\nThis item comes with an original authenticity seal.\nCondition: EXCELLENT. This previously owned item is in near-perfect condition with no signs of damage or use.\nComposition\nOuter: Caviar Leather 100%\n\n",
+                "price": "1700.00",
+                "category": "Tote Bag",
+                "brand": "Chanel",
+                "stock_quantity": 5,
+                "sku": "2021-2022-MATELASS\u00e9-TOTE-BAG",
+                "is_active": true,
+                "is_featured": false,
+                "images": [
+                    "products\/main\/d6BK7UUWK8ZuUtBRQ7pKuzsjVGx6AJkYlfGuPmmh.webp",
+                    "products\/additional\/5Ao0OVVXrijXkNEGAuuPk0I8jlCTvEc2LOD9Hsle.webp",
+                    "products\/additional\/bcNn33YyINET9Cx1LXWiKCj7qOGqFSFNwv7Q2s7S.webp",
+                    "products\/additional\/2WXYzKsKjabWKvD3w122pWGswllfDJbKCXWIzHKD.webp"
+                ],
+                "slug": "2021-2022-matelasse-tote-bag",
+                "created_by": null,
+                "updated_at": "2025-10-02T21:29:26.498000Z",
+                "created_at": "2025-10-02T21:29:26.498000Z",
+                "id": "68deeeb669080b34830a2ddf"
+            },
+            {
+                "name": "2012-2013 CC Quilted Caviar Frame Shopping tote bag",
+                "description": "CHANEL Pre-Owned\n2012-2013 CC Quilted Caviar Frame Shopping tote bag\n\nMade in France\n\nHighlights\nquilted caviar leather body\nleather woven chain straps\nopen top with magnetic snap button closure\ninterior zip pocket\nred\nSerial Number: 17555999\nThis item has no inclusions.\nCondition: GOOD. This previously owned and used item is in good condition with minimal signs of use. This may include fading of material or plating and scratches.\nPlease refer to the photos on this product page for a detailed view of the item, including any damages declared.\nComposition\nOuter: Caviar Leather 100%",
+                "price": "1800.00",
+                "category": "Tote Bag",
+                "brand": "Chanel",
+                "stock_quantity": 4,
+                "sku": "2012-2013-CC-QUILTED-CAVIAR-FRAME-SHOPPING-TOTE-BAG",
+                "is_active": true,
+                "is_featured": false,
+                "images": [
+                    "products\/main\/Unfu0LTWaej5XJksko2zDCHvE9m64KtSYxzOj62m.webp",
+                    "products\/additional\/Nmq9aNSaIPoF4rWnHQB3GQm3a7FTKAYP8KATQdwC.webp",
+                    "products\/additional\/IieZPFn2f8SDh6Kp5f49RYNDYep3BPIFojJX0c2E.webp",
+                    "products\/additional\/VrpWpxo7gAkYryxGLUXLOCzrw1Ne8KcSOv8enEi3.webp",
+                    "products\/additional\/0ish4Pay3Ho1bhjX9nDx0icNxVTJeYgyODj5D7Mu.webp"
+                ],
+                "slug": "2012-2013-cc-quilted-caviar-frame-shopping-tote-bag",
+                "created_by": null,
+                "updated_at": "2025-10-02T21:30:45.343000Z",
+                "created_at": "2025-10-02T21:30:45.343000Z",
+                "id": "68deef0569080b34830a2de0"
+            },
+            {
+                "name": "Mini GG Marmont heart-shaped tote bag",
+                "description": "Gucci\nmini GG Marmont heart-shaped tote bag\n\nMade in Italy\n\nHighlights\ndark red\nheart shape\nMarmont quilted\ntop handle\nzip fastening\ngold-tone logo\nComposition\nOuter: Calf Leather 100%\n\nWearing\nThe model is 1.75 m wearing size OS",
+                "price": "2800.00",
+                "category": "Tote Bag",
+                "brand": "Gucci",
+                "stock_quantity": 2,
+                "sku": "MINI-GG-MARMONT-HEART-SHAPED-TOTE-BAG",
+                "is_active": true,
+                "is_featured": false,
+                "images": [
+                    "products\/main\/uj5KH3s2GxpuYYkNVBchzmvzCjXk6fD3kACNT2qx.webp",
+                    "products\/additional\/hoezQVm5GFGnUzg59DHmmzDnWa9zUieugG2C6Z77.webp",
+                    "products\/additional\/4Y2ifQ1cd1pWunXkj1wprAiOoobYyvuvCb9UdwHx.webp",
+                    "products\/additional\/CCdksLXJ74R0oRnG7eClwvJZXFaIWNPqgRuDx21F.webp",
+                    "products\/additional\/LCRvKYlPIMZ07hSjYHTqI0MWiQdQGb3AghRYN76v.webp"
+                ],
+                "slug": "mini-gg-marmont-heart-shaped-tote-bag",
+                "created_by": null,
+                "updated_at": "2025-10-02T21:32:05.168000Z",
+                "created_at": "2025-10-02T21:31:39.201000Z",
+                "updated_by": null,
+                "id": "68deef3b69080b34830a2de1"
+            },
+            {
+                "name": "Leather tote bag",
+                "description": "Gucci\nleather tote bag\n\nMade in Italy\n\nHighlights\nbrown\nopen toe\ndetachable shoulder strap\nlogo print to the front\nmain compartment\nComposition\nOuter: CALFSKIN 100%",
+                "price": "1300.00",
+                "category": "Tote Bag",
+                "brand": "Gucci",
+                "stock_quantity": 6,
+                "sku": "LEATHER-TOTE-BAG",
+                "is_active": true,
+                "is_featured": false,
+                "images": [
+                    "products\/main\/M9NOD8vCjucIKfGwow3iJFLTt6mwvdyflNJ1XIil.webp",
+                    "products\/additional\/E8b6aOs6fY9k1XalLyrIih8mo2G4fXe0IYjQ2CLR.webp",
+                    "products\/additional\/GATi4EfwFQr0crX4kgOjFuB3BotHcFWbI3aast19.webp",
+                    "products\/additional\/VXjNe3L439NhY7OYIvuS5Y8YQFPUsUQz26wvRuhZ.webp",
+                    "products\/additional\/6t7zSVpNyJ0pezd6cIfBnLWVnIgct4ZxaCf38mCY.webp"
+                ],
+                "slug": "leather-tote-bag",
+                "created_by": null,
+                "updated_at": "2025-10-02T21:32:57.866000Z",
+                "created_at": "2025-10-02T21:32:57.866000Z",
+                "id": "68deef8969080b34830a2de2"
+            },
+            {
+                "name": "mini Le 5 \u00e0 7 logo shoulder bag",
+                "description": "Saint Laurent\nmini Le 5 \u00e0 7 logo shoulder bag\n\nMade in Italy\n\nHighlights\nsage green\ncalfskin leather\nshoulder strap\nlogo hook closure\nComposition\nOuter: CALFSKIN 90%, Metal 10%",
+                "price": "1900.00",
+                "category": " Shoulder bags",
+                "brand": "Saint Laurent",
+                "stock_quantity": 1,
+                "sku": "MINI-LE-5-\u00e0-7-LOGO-SHOULDER-BAG",
+                "is_active": true,
+                "is_featured": false,
+                "images": [
+                    "products\/main\/CjTHJOskfbT19e4ixJFh30m2zb4odtx2oxI0punb.webp",
+                    "products\/additional\/T0vjRYdPMxWiPvUCE3ehl2msPm22Ho3CCCi2VbOk.webp",
+                    "products\/additional\/2nFzu7NTUARmvFxxPWTwlr7DnudpJRCIWblQxoRL.webp",
+                    "products\/additional\/WO88E0u4W8NUZz4AdU8rU3lG7JUW2MP7VI3hbZcR.webp"
+                ],
+                "slug": "mini-le-5-a-7-logo-shoulder-bag",
+                "created_by": null,
+                "updated_at": "2025-10-14T13:40:17.005000Z",
+                "created_at": "2025-10-02T21:34:28.786000Z",
+                "id": "68deefe469080b34830a2de3"
+            },
+            {
+                "name": "Gaby quilted mini tote bag",
+                "description": "Saint Laurent\nGaby quilted mini tote bag\n\nMade in Italy\n\nHighlights\nbrown\ncalf leather\ndiamond-shaped quilting\ntop handle\nzip fastening\ngold-tone Cassandre logo\ndetachable and adjustable strap\nComposition\nOuter: Calf Leather 100%\n\nWearing\nThe model is 1.79 m wearing size OS",
+                "price": "3600.00",
+                "category": "Tote Bag",
+                "brand": "Saint Laurent",
+                "stock_quantity": 7,
+                "sku": "GABY-QUILTED-MINI-TOTE-BAG",
+                "is_active": true,
+                "is_featured": false,
+                "images": [
+                    "products\/main\/GE00rckZ8BLtE78bdzTquGPwK8TmO5PTIPJMt78j.webp",
+                    "products\/additional\/uUQji7bnX5yjiK6adhLpjnhxCHONeWxGcSE6rkg3.webp",
+                    "products\/additional\/ypY3fvFC31KMy3aT4JPHBA1P4qE7Kn7PE1Eio6av.webp",
+                    "products\/additional\/AYhZh3sEijJM2KyGBzZzJOLURnaLXnqCa9YN5BbL.webp",
+                    "products\/additional\/5xhGE6AfLg9SCWQaidkjV3vczxMa24tqgRYc52Uo.webp"
+                ],
+                "slug": "gaby-quilted-mini-tote-bag",
+                "created_by": null,
+                "updated_at": "2025-10-14T16:06:01.299000Z",
+                "created_at": "2025-10-02T21:36:33.885000Z",
+                "id": "68def06169080b34830a2de4"
+            },
+            {
+                "name": "1990-2000s diamond-quilted mini bag",
+                "description": "CHANEL Pre-Owned\n1990-2000s diamond-quilted mini bag\n\nMade in France\n\nHighlights\n1990-2000s\nblack\ndiamond quilted\nsatin finish\nchain-link shoulder strap\nfront flap closure\ngold-tone hardware\nCondition: GOOD. This previously owned and used item is in good condition with minimal signs of use. This may include fading of material or plating and scratches.\nComposition\nOuter: Satin 100%",
+                "price": "1600.00",
+                "category": " Mini bags",
+                "brand": "Chanel",
+                "stock_quantity": 0,
+                "sku": "1990-2000S-DIAMOND-QUILTED-MINI-BAG",
+                "is_active": true,
+                "is_featured": false,
+                "images": [
+                    "products\/main\/jCLfeVfTkYwTfJ31E5LKe9xm4G8w9pEm5zDIL7Sv.webp",
+                    "products\/additional\/hwXKd0rFMmkbQ3kOuY5bytXP4BBaF4bYthl2Dfia.webp",
+                    "products\/additional\/5lApDEys5shmHiNhGRg0qXONwmJEbIaAy44LTteW.webp",
+                    "products\/additional\/wDDspYlFPJY0ATzzQVNCtazfDHepV8AhiLH6h3Jp.webp",
+                    "products\/additional\/cJgCtwhMvEjQ2AU6yOGcrSG319ejMeN4xCUQrpi0.webp"
+                ],
+                "slug": "1990-2000s-diamond-quilted-mini-bag",
+                "created_by": null,
+                "updated_at": "2025-10-14T16:06:01.311000Z",
+                "created_at": "2025-10-02T21:38:16.883000Z",
+                "id": "68def0c869080b34830a2de5"
+            },
+            {
+                "name": "2000-2002 caviar-leather top-handle mini bags",
+                "description": "CHANEL Pre-Owned\n2000-2002 caviar-leather top-handle mini bag\n\nMade in France\n\nHighlights\ncirca 2000-2002\nblack\ncaviar leather\ntop handle\ngold-tone hardware\nzip fastening\nembossed logo\nComposition\nOuter: Caviar Leather 100%\n\nLining: Leather 100%",
+                "price": "1400.00",
+                "category": " Mini bags",
+                "brand": "Chanel",
+                "stock_quantity": 2,
+                "sku": "2000-2002-CAVIAR-LEATHER-TOP-HANDLE-MINI-BAG",
+                "is_active": true,
+                "is_featured": false,
+                "images": [
+                    "products\/main\/kAEf3wtRXOVi61T10E5UHEZI0vi6UWRK2AcFvwWF.webp",
+                    "products\/additional\/xHJEWOY7EUJDBM2x1cTv70gGQkWnS6kIBfghtqJu.webp",
+                    "products\/additional\/sG7jM8YnNR8p3nSjZ3faD8RQHiG3qlkRDptdPQc0.webp",
+                    "products\/additional\/kfQsMN6KZkwmsH9OVdL3b4r19aqeZlujBUw2nTKx.webp",
+                    "products\/additional\/x9kBijoGwM9uShri5aS5wPjrSar4JxGVqCZ4dTy5.webp"
+                ],
+                "slug": "2000-2002-caviar-leather-top-handle-mini-bag",
+                "created_by": null,
+                "updated_at": "2025-10-14T16:35:24.020000Z",
+                "created_at": "2025-10-02T21:38:52.724000Z",
+                "updated_by": null,
+                "id": "68def0ec69080b34830a2de6"
+            }
+        ],
+        "categories": [
+            {
+                "name": "Tote Bag",
+                "slug": "tote-bag",
+                "description": "",
+                "is_active": true,
+                "updated_at": "2025-10-01T06:08:23.697000Z",
+                "created_at": "2025-10-01T06:08:23.697000Z",
+                "id": "68dcc557f1db92ac9b07ad92"
+            },
+            {
+                "name": " Mini bags",
+                "slug": "mini-bags",
+                "description": "",
+                "is_active": true,
+                "updated_at": "2025-10-14T16:32:56.808000Z",
+                "created_at": "2025-10-01T06:38:28.112000Z",
+                "id": "68dccc64f1db92ac9b07ad94"
+            },
+            {
+                "name": " Shoulder bags",
+                "slug": "shoulder-bags",
+                "description": "",
+                "is_active": true,
+                "updated_at": "2025-10-02T19:49:42.609000Z",
+                "created_at": "2025-10-01T07:02:01.667000Z",
+                "id": "68dcd1e9f1db92ac9b07ad96"
+            },
+            {
+                "name": "Satchel Bag",
+                "slug": "satchel-bag",
+                "description": "",
+                "is_active": true,
+                "updated_at": "2025-10-02T19:49:52.731000Z",
+                "created_at": "2025-10-02T19:49:52.731000Z",
+                "id": "68ded76069080b34830a2dd4"
+            },
+            {
+                "name": "Clutch Bag",
+                "slug": "clutch-bag",
+                "description": "",
+                "is_active": true,
+                "updated_at": "2025-10-02T21:10:27.872000Z",
+                "created_at": "2025-10-02T19:50:47.430000Z",
+                "id": "68ded79769080b34830a2dd5"
+            }
+        ],
+        "brands": [
+            {
+                "name": "Gucci",
+                "slug": "gucci",
+                "description": "",
+                "is_active": true,
+                "updated_at": "2025-10-01T06:08:31.229000Z",
+                "created_at": "2025-10-01T06:08:31.229000Z",
+                "id": "68dcc55ff1db92ac9b07ad93"
+            },
+            {
+                "name": "Louis Vuitton",
+                "slug": "louis-vuitton",
+                "description": "",
+                "is_active": true,
+                "updated_at": "2025-10-02T19:47:48.318000Z",
+                "created_at": "2025-10-01T06:38:44.392000Z",
+                "id": "68dccc74f1db92ac9b07ad95"
+            },
+            {
+                "name": "Chanel",
+                "slug": "chanel",
+                "description": "",
+                "is_active": true,
+                "updated_at": "2025-10-02T19:47:53.759000Z",
+                "created_at": "2025-10-01T07:02:10.441000Z",
+                "id": "68dcd1f2f1db92ac9b07ad97"
+            },
+            {
+                "name": "Chlo\u00e9",
+                "slug": "chloe",
+                "description": "",
+                "is_active": true,
+                "updated_at": "2025-10-02T19:48:21.643000Z",
+                "created_at": "2025-10-02T19:48:21.643000Z",
+                "id": "68ded70569080b34830a2dd2"
+            },
+            {
+                "name": "Saint Laurent",
+                "slug": "saint-laurent",
+                "description": "",
+                "is_active": true,
+                "updated_at": "2025-10-02T19:48:31.053000Z",
+                "created_at": "2025-10-02T19:48:31.053000Z",
+                "id": "68ded70f69080b34830a2dd3"
+            }
+        ]
+    }
+}

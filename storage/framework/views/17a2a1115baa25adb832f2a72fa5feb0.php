@@ -133,7 +133,7 @@ unset($__defined_vars, $__key, $__value); ?>
         </div>
         <div x-show="totalQueries > 0" class="text-sm text-neutral-500 dark:text-neutral-400 flex items-center gap-2">
             <span x-text="`${((currentPage - 1) * perPage) + 1}-${Math.min(currentPage * perPage, totalQueries)} of ${totalQueries}`"></span>
-            <?php if(count($queries) > 100): ?>
+            <!--[if BLOCK]><![endif]--><?php if(count($queries) > 100): ?>
                 <?php if (isset($component)) { $__componentOriginalc6e888149e09c77971305ebbddaee753 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc6e888149e09c77971305ebbddaee753 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'laravel-exceptions-renderer::components.icons.info','data' => ['class' => 'w-3 h-3 text-blue-500 dark:text-emerald-500','dataTippyContent' => 'Only the first 100 queries are shown']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -154,12 +154,12 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php $component = $__componentOriginalc6e888149e09c77971305ebbddaee753; ?>
 <?php unset($__componentOriginalc6e888149e09c77971305ebbddaee753); ?>
 <?php endif; ?>
-            <?php endif; ?>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
         </div>
     </div>
 
     <div class="flex flex-col gap-1">
-        <?php $__empty_1 = true; $__currentLoopData = array_slice($queries, 0, 100); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => ['connectionName' => $connectionName, 'sql' => $sql, 'time' => $time]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+        <!--[if BLOCK]><![endif]--><?php $__empty_1 = true; $__currentLoopData = array_slice($queries, 0, 100); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => ['connectionName' => $connectionName, 'sql' => $sql, 'time' => $time]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
         <div
             class="border border-neutral-200 dark:border-none bg-white dark:bg-white/[3%] rounded-md h-10 flex items-center justify-between gap-4 px-4 text-xs font-mono shadow-xs"
             x-show="Math.floor(<?php echo e($index); ?> / perPage) === (currentPage - 1)"
@@ -190,14 +190,14 @@ unset($__defined_vars, $__key, $__value); ?>
                 </div>
                 <?php if (isset($component)) { $__componentOriginal12cb286571f553eebcbe98210b217f94 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal12cb286571f553eebcbe98210b217f94 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'laravel-exceptions-renderer::components.syntax-highlight','data' => ['code' => $sql,'grammar' => 'sql','truncate' => true,'class' => 'min-w-0','dataTippyContent' => ''.e($sql).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'laravel-exceptions-renderer::components.syntax-highlight','data' => ['code' => $sql,'language' => 'sql','truncate' => true,'class' => 'min-w-0','dataTippyContent' => ''.e($sql).'']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('laravel-exceptions-renderer::syntax-highlight'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['code' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($sql),'grammar' => 'sql','truncate' => true,'class' => 'min-w-0','data-tippy-content' => ''.e($sql).'']); ?>
+<?php $component->withAttributes(['code' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($sql),'language' => 'sql','truncate' => true,'class' => 'min-w-0','data-tippy-content' => ''.e($sql).'']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal12cb286571f553eebcbe98210b217f94)): ?>
@@ -232,7 +232,7 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php $component = $__componentOriginal612ffe32146e3bd2ac6ba6076cca9520; ?>
 <?php unset($__componentOriginal612ffe32146e3bd2ac6ba6076cca9520); ?>
 <?php endif; ?>
-        <?php endif; ?>
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
     </div>
 
     <!-- Pagination Controls -->

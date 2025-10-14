@@ -145,8 +145,9 @@
         <!--[if BLOCK]><![endif]--><?php if($products->count() > 0): ?>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-12" id="products-grid">
                 <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <div class="product-card group bg-white rounded-xl shadow-sm hover:shadow-lg border border-gray-200 overflow-hidden transition-shadow duration-300 flex flex-col h-full"
-                         data-index="<?php echo e($index); ?>">
+                    <div class="product-card group bg-white rounded-xl shadow-sm hover:shadow-lg border border-gray-200 overflow-hidden transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 flex flex-col h-full opacity-0 translate-y-8"
+                         data-index="<?php echo e($index); ?>"
+                         style="transition-delay: <?php echo e($index * 0.1); ?>s">
                         
                         
                         <div class="relative aspect-square overflow-hidden bg-gray-50 flex-shrink-0">
@@ -155,7 +156,7 @@
                                 <!--[if BLOCK]><![endif]--><?php if(isset($product->images) && is_array($product->images) && count($product->images) > 0): ?>
                                     <img src="<?php echo e(Storage::url($product->images[0])); ?>" 
                                          alt="<?php echo e($product->name); ?>" 
-                                         class="w-full h-full object-cover"
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                          loading="lazy">
                                 <?php else: ?>
                                     <div class="w-full h-full flex items-center justify-center">
@@ -172,7 +173,7 @@
                                     </span>
                                 <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 <!--[if BLOCK]><![endif]--><?php if(isset($product->stock_quantity) && $product->stock_quantity <= 5 && $product->stock_quantity > 0): ?>
-                                    <span class="bg-orange-500 text-white text-xs px-2 py-1 rounded font-medium shadow-sm">
+                                    <span class="bg-orange-500 text-white text-xs px-2 py-1 rounded font-medium shadow-sm animate-pulse">
                                         Only <?php echo e($product->stock_quantity); ?> left
                                     </span>
                                 <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
@@ -245,34 +246,27 @@
 
                             
                             <div class="mt-auto">
-                                <!--[if BLOCK]><![endif]--><?php if(!isset($product->stock_quantity) || $product->stock_quantity > 0): ?>
-                                    <!--[if BLOCK]><![endif]--><?php if($this->canAddToCart($product)): ?>
+                                <?php if(auth()->guard()->check()): ?>
+                                    <!--[if BLOCK]><![endif]--><?php if(!isset($product->stock_quantity) || $product->stock_quantity > 0): ?>
                                         <button wire:click="addToCart('<?php echo e($product->_id); ?>')" 
                                                 class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-2 group">
                                             <i class="fas fa-shopping-bag text-sm"></i>
                                             <span>Add to Cart</span>
-                                            <!--[if BLOCK]><![endif]--><?php if($this->getCartQuantity($product->_id) > 0): ?>
-                                                <span class="ml-2 px-2 py-1 bg-blue-800 rounded-full text-xs"><?php echo e($this->getCartQuantity($product->_id)); ?></span>
-                                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                             <div wire:loading.delay wire:target="addToCart('<?php echo e($product->_id); ?>')" class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent ml-2"></div>
                                         </button>
                                     <?php else: ?>
-                                        <?php
-                                            $cartQty = $this->getCartQuantity($product->_id);
-                                            $maxQty = min(3, $product->stock_quantity ?? 3);
-                                        ?>
                                         <button disabled 
                                                 class="w-full bg-gray-200 text-gray-500 py-3 rounded-lg font-medium cursor-not-allowed flex items-center justify-center space-x-2">
-                                            <i class="fas fa-check-circle text-sm"></i>
-                                            <span>Max Qty (<?php echo e($cartQty); ?>/<?php echo e($maxQty); ?>)</span>
+                                            <i class="fas fa-times-circle text-sm"></i>
+                                            <span>Out of Stock</span>
                                         </button>
                                     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 <?php else: ?>
-                                    <button disabled 
-                                            class="w-full bg-gray-200 text-gray-500 py-3 rounded-lg font-medium cursor-not-allowed flex items-center justify-center space-x-2">
-                                        <i class="fas fa-times-circle text-sm"></i>
-                                        <span>Out of Stock</span>
-                                    </button>
+                                    <a href="<?php echo e(route('login')); ?>" 
+                                       class="block w-full bg-gray-700 hover:bg-gray-800 text-white py-3 rounded-lg font-medium transition-colors duration-200 text-center">
+                                        <i class="fas fa-sign-in-alt mr-2 text-sm"></i>
+                                        Login to Purchase
+                                    </a>
                                 <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             </div>
                         </div>
@@ -385,21 +379,53 @@
             align-items: flex-start;
         }
 
-        /* Simplified Product Card Styles */
+        /* Enhanced Scroll Animations */
         .product-card {
             min-height: 480px;
             display: flex;
             flex-direction: column;
-            transition: all 0.3s ease;
-            opacity: 1 !important;
-            transform: translateY(0) !important;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .product-card.animate-in {
+            opacity: 1;
+            transform: translateY(0) scale(1);
         }
 
         .product-card:hover {
             transform: translateY(-8px) scale(1.02);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
+
+        /* Staggered Animation */
+        .product-card.animate-in:nth-child(1) { animation-delay: 0.1s; }
+        .product-card.animate-in:nth-child(2) { animation-delay: 0.2s; }
+        .product-card.animate-in:nth-child(3) { animation-delay: 0.3s; }
+        .product-card.animate-in:nth-child(4) { animation-delay: 0.4s; }
+        .product-card.animate-in:nth-child(5) { animation-delay: 0.5s; }
+        .product-card.animate-in:nth-child(6) { animation-delay: 0.6s; }
+        .product-card.animate-in:nth-child(7) { animation-delay: 0.7s; }
         .product-card.animate-in:nth-child(8) { animation-delay: 0.8s; }
+
+        /* Floating Animation for Icons */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Pulse Animation for Badges */
+        @keyframes pulse-soft {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse-soft {
+            animation: pulse-soft 2s ease-in-out infinite;
+        }
 
         /* Smooth Page Transitions */
         .page-transition {
@@ -432,28 +458,60 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Simple hover effects for product cards - no complex animations
+            // Intersection Observer for scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const card = entry.target;
+                        const index = parseInt(card.dataset.index) || 0;
+                        
+                        // Stagger the animation based on index
+                        setTimeout(() => {
+                            card.classList.add('animate-in');
+                        }, index * 100);
+                        
+                        // Unobserve once animated
+                        observer.unobserve(card);
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all product cards
             const productCards = document.querySelectorAll('.product-card');
             productCards.forEach(card => {
-                // Cards are visible by default, no animation needed
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
+                observer.observe(card);
             });
 
-            // Icons and badges are now static - no auto-dancing animations
-
-            // Handle pagination clicks to ensure products remain visible
-            document.addEventListener('click', (e) => {
-                if (e.target.matches('.pagination a, .pagination a *')) {
-                    // After pagination, ensure products are visible
+            // Add floating animation to icons with delay
+            setTimeout(() => {
+                const icons = document.querySelectorAll('.fas.fa-heart, .fas.fa-shopping-bag, .fas.fa-star');
+                icons.forEach((icon, index) => {
                     setTimeout(() => {
-                        const productCards = document.querySelectorAll('.product-card');
-                        productCards.forEach(card => {
-                            card.style.opacity = '1';
-                            card.style.transform = 'translateY(0)';
-                        });
-                    }, 100);
-                }
+                        icon.classList.add('floating');
+                    }, index * 200);
+                });
+            }, 1000);
+
+            // Add pulse animation to badges
+            const badges = document.querySelectorAll('.bg-orange-500, .bg-red-500, .bg-blue-600');
+            badges.forEach((badge, index) => {
+                setTimeout(() => {
+                    badge.classList.add('pulse-soft');
+                }, index * 300);
+            });
+
+            // Smooth scroll behavior for pagination
+            const paginationLinks = document.querySelectorAll('.pagination a');
+            paginationLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    // Add loading effect
+                    document.getElementById('products-grid').classList.add('shimmer');
+                });
             });
 
             // Add page transition class
@@ -483,20 +541,37 @@
                 }
             });
 
-            // Ensure products remain visible after Livewire updates
+            // Livewire loading states enhancement
             document.addEventListener('livewire:load', function () {
+                Livewire.hook('message.sent', () => {
+                    // Add loading shimmer to product grid
+                    const grid = document.getElementById('products-grid');
+                    if (grid) {
+                        grid.style.opacity = '0.7';
+                        grid.classList.add('shimmer');
+                    }
+                });
+
                 Livewire.hook('message.processed', () => {
-                    // Ensure all product cards are visible after any Livewire update
-                    const productCards = document.querySelectorAll('.product-card');
-                    productCards.forEach(card => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    });
-                    
-                    // Ensure grid is always visible
+                    // Remove loading shimmer and re-animate products
                     const grid = document.getElementById('products-grid');
                     if (grid) {
                         grid.style.opacity = '1';
+                        grid.classList.remove('shimmer');
+                        
+                        // Re-observe new product cards
+                        const newCards = grid.querySelectorAll('.product-card:not(.animate-in)');
+                        newCards.forEach((card, index) => {
+                            card.style.opacity = '0';
+                            card.style.transform = 'translateY(30px)';
+                            
+                            setTimeout(() => {
+                                card.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                                card.style.opacity = '1';
+                                card.style.transform = 'translateY(0)';
+                                card.classList.add('animate-in');
+                            }, index * 100);
+                        });
                     }
                 });
             });

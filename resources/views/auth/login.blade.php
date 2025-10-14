@@ -425,9 +425,16 @@
                 </button>
             </div>
         @elseif ($errors->any())
-            <div class="bg-red-600 text-white px-6 py-4 rounded-xl shadow-lg flex items-start justify-between gap-4 min-w-80">
+            @php
+                $firstError = $errors->first();
+                $isLockoutError = str_contains(strtolower($firstError), 'locked') || str_contains(strtolower($firstError), 'too many');
+                $bgColor = $isLockoutError ? 'bg-orange-600' : 'bg-red-600';
+                $hoverColor = $isLockoutError ? 'hover:bg-orange-700' : 'hover:bg-red-700';
+                $icon = $isLockoutError ? 'fas fa-lock' : 'fas fa-exclamation-triangle';
+            @endphp
+            <div class="{{ $bgColor }} text-white px-6 py-4 rounded-xl shadow-lg flex items-start justify-between gap-4 min-w-80">
                 <div class="flex items-start gap-3">
-                    <i class="fas fa-exclamation-triangle text-lg mt-1"></i>
+                    <i class="{{ $icon }} text-lg mt-1"></i>
                     <div>
                         @if($errors->count() == 1)
                             <span>{{ $errors->first() }}</span>
@@ -443,7 +450,7 @@
                         @endif
                     </div>
                 </div>
-                <button @click="show = false" class="text-white hover:bg-red-700 rounded-lg px-2 py-1 transition-colors">
+                <button @click="show = false" class="text-white {{ $hoverColor }} rounded-lg px-2 py-1 transition-colors">
                     <i class="fas fa-times"></i>
                 </button>
             </div>

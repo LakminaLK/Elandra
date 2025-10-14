@@ -16,6 +16,7 @@ class CartCounter extends Component
     }
 
     #[On('cart-updated')]
+    #[On('refreshCartCount')]
     public function updateCartCount()
     {
         $userId = auth()->id();

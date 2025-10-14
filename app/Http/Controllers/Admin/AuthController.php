@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use App\Models\AdminLoginAttempt;
 
 class AuthController extends Controller
 {
@@ -24,7 +25,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle admin login
+     * Handle admin login with account lockout security
      */
     public function login(Request $request)
     {
@@ -35,6 +36,29 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
+        }
+
+        $email = $request->email;
+        $ipAddress = $request->ip();
+        $userAgent = $request->userAgent();
+        
+        // Check for existing login attempts
+        $loginAttempt = AdminLoginAttempt::getCurrentAttempt($email, $ipAddress);
+        
+        // Check if account is currently locked
+        if ($loginAttempt && $loginAttempt->isLocked()) {
+            $remainingTime = $loginAttempt->getRemainingLockoutFormatted();
+            
+            Log::warning('Admin login attempt on locked account', [
+                'email' => $email,
+                'ip_address' => $ipAddress,
+                'remaining_lockout' => $remainingTime,
+                'user_agent' => $userAgent
+            ]);
+            
+            return back()->withErrors([
+                'email' => "Account is temporarily locked due to too many failed login attempts. Please try again in {$remainingTime}."
+            ])->withInput(['email']);
         }
 
         $credentials = $request->only('email', 'password');
@@ -51,6 +75,9 @@ class AuthController extends Controller
                 ])->withInput();
             }
 
+            // Record successful login and clear any failed attempts
+            AdminLoginAttempt::recordSuccessfulAttempt($email, $ipAddress, $userAgent);
+            
             // Update last login
             $admin->update(['last_login_at' => now()]);
 
@@ -59,23 +86,39 @@ class AuthController extends Controller
             Log::info('Admin logged in successfully', [
                 'admin_id' => $admin->id,
                 'admin_email' => $admin->email,
-                'ip_address' => $request->ip(),
-                'user_agent' => $request->userAgent()
+                'ip_address' => $ipAddress,
+                'user_agent' => $userAgent
             ]);
 
             return redirect()->intended(route('admin.dashboard'))
                 ->with('success', 'Welcome back, ' . $admin->name . '!');
         }
 
+        // Record failed login attempt
+        $attempt = AdminLoginAttempt::recordFailedAttempt($email, $ipAddress, $userAgent);
+        
         Log::warning('Failed admin login attempt', [
-            'email' => $request->email,
-            'ip_address' => $request->ip(),
-            'user_agent' => $request->userAgent()
+            'email' => $email,
+            'ip_address' => $ipAddress,
+            'user_agent' => $userAgent,
+            'attempts_count' => $attempt->attempts_count,
+            'is_locked' => $attempt->isLocked()
         ]);
 
+        // Prepare error message based on attempt count
+        $errorMessage = 'The provided credentials do not match our records.';
+        $remainingAttempts = 5 - $attempt->attempts_count;
+        
+        if ($attempt->isLocked()) {
+            $lockoutTime = $attempt->getRemainingLockoutFormatted();
+            $errorMessage = "Too many failed login attempts. Your account has been locked for {$lockoutTime}.";
+        } elseif ($remainingAttempts <= 2 && $remainingAttempts > 0) {
+            $errorMessage = "Invalid credentials. You have {$remainingAttempts} attempt(s) remaining before your account will be locked.";
+        }
+
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->withInput();
+            'email' => $errorMessage,
+        ])->withInput(['email']);
     }
 
     /**

@@ -5,7 +5,12 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\Auth\CustomPasswordResetController;
+use App\Http\Controllers\HealthController;
 use Illuminate\Support\Facades\Route;
+
+// Health check routes
+Route::get('/health', [HealthController::class, 'simpleHealth'])->name('health.simple');
+Route::get('/health/detailed', [HealthController::class, 'healthCheck'])->name('health.detailed');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -25,6 +30,7 @@ Route::middleware([
     })->name('dashboard');
     
     Route::get('/cart', [App\Http\Controllers\CartController::class, 'index'])->name('cart');
+    Route::post('/cart/add', [App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
     
     Route::match(['GET', 'POST'], '/checkout', [App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout/process', [App\Http\Controllers\CheckoutController::class, 'process'])->name('checkout.process');
@@ -40,7 +46,6 @@ Route::middleware([
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
     Route::patch('/profile', [App\Http\Controllers\ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::patch('/profile/password', [App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password.update');
-    Route::patch('/profile/mobile', [App\Http\Controllers\ProfileController::class, 'updateMobile'])->name('profile.mobile.update');
     Route::post('/profile/photo', [App\Http\Controllers\ProfileController::class, 'uploadPhoto'])->name('profile.photo.upload');
     Route::delete('/profile/photo', [App\Http\Controllers\ProfileController::class, 'removePhoto'])->name('profile.photo.remove');
 });

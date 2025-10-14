@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\CustomerManagementController;
 use App\Http\Controllers\Admin\OrderManagementController;
 use App\Http\Controllers\Admin\CategoryManagementController;
+use App\Http\Controllers\HealthController;
 use Illuminate\Support\Facades\Route;
 
 // Admin Authentication Routes (without middleware)
@@ -54,6 +55,11 @@ Route::prefix('admin')->name('admin.')->middleware(['admin'])->group(function ()
     Route::get('/', function () {
         return redirect()->route('admin.dashboard');
     });
+    
+    // System Monitoring
+    Route::get('/monitoring', function () {
+        return view('admin.monitoring');
+    })->name('monitoring');
     
     // Debug routes
     Route::get('/debug-auth', function () {

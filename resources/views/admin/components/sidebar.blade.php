@@ -53,6 +53,20 @@
                 </div>
             </div>
 
+            <!-- System Section -->
+            <div class="mb-6">
+                <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">System</p>
+                
+                <div class="space-y-2">
+                    <!-- System Monitoring -->
+                    <a href="{{ route('admin.monitoring') }}" 
+                       class="sidebar-link group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 {{ request()->routeIs('admin.monitoring') ? 'bg-blue-600 text-white shadow-md' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900' }}">
+                        <i class="fas fa-heartbeat w-5 h-5 mr-3 {{ request()->routeIs('admin.monitoring') ? 'text-white' : 'text-gray-400' }}"></i>
+                        <span>System Monitoring</span>
+                    </a>
+                </div>
+            </div>
+
             <!-- Account Section -->
             <div class="mb-6">
                 <p class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Account</p>

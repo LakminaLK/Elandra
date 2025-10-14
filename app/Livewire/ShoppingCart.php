@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Computed;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Product;
@@ -17,13 +18,34 @@ class ShoppingCart extends Component
     public $couponCode = '';
     public $discount = 0;
     public $showCouponForm = false;
+    public $selectionVersion = 0; // Force reactivity
+    #[Computed]
+    public function hasSelectedItems()
+    {
+        return count($this->selectedItems ?? []) > 0;
+    }
     
-    // Real-time polling for cart updates
-    protected $polling = true;
+    #[Computed]
+    public function selectedCount()
+    {
+        return count($this->selectedItems ?? []);
+    }
 
     public function mount()
     {
         $this->refreshCart();
+        // Ensure selected items is always an array
+        if (!is_array($this->selectedItems)) {
+            $this->selectedItems = [];
+        }
+    }
+    
+    public function hydrate()
+    {
+        // Called after Livewire hydrates the component - ensure proper state
+        if (!is_array($this->selectedItems)) {
+            $this->selectedItems = [];
+        }
     }
 
     public function refreshCart()
@@ -32,18 +54,50 @@ class ShoppingCart extends Component
             $this->cartItems = Cart::where('user_id', auth()->id())
                 ->orderBy('created_at', 'desc')
                 ->get();
+                
+            // Update select all state after refresh
+            $this->updateSelectAllState();
         } else {
             $this->cartItems = collect();
+            $this->selectedItems = [];
+            $this->selectAll = false;
+        }
+    }
+
+    public function forceRefresh()
+    {
+        $this->refreshCart();
+        $this->dispatch('cart-refreshed');
+    }
+
+    #[On('refresh-cart')]
+    public function handleRefreshCart()
+    {
+        $this->refreshCart();
+    }
+
+    public function incrementQuantity($cartItemId)
+    {
+        $cartItem = Cart::find($cartItemId);
+        if ($cartItem && $cartItem->user_id === auth()->id()) {
+            $this->updateQuantity($cartItemId, $cartItem->quantity + 1);
+        }
+    }
+
+    public function decrementQuantity($cartItemId)
+    {
+        $cartItem = Cart::find($cartItemId);
+        if ($cartItem && $cartItem->user_id === auth()->id()) {
+            $this->updateQuantity($cartItemId, $cartItem->quantity - 1);
         }
     }
 
     public function updateQuantity($cartItemId, $quantity)
     {
         if (!auth()->check()) {
+            session()->flash('error', 'Please log in to update cart.');
             return;
         }
-
-        $this->isLoading = true;
 
         try {
             $cartItem = Cart::findOrFail($cartItemId);
@@ -51,7 +105,6 @@ class ShoppingCart extends Component
             // Check if cart item belongs to user
             if ($cartItem->user_id !== auth()->id()) {
                 session()->flash('error', 'Unauthorized action');
-                $this->isLoading = false;
                 return;
             }
 
@@ -60,24 +113,50 @@ class ShoppingCart extends Component
                 return;
             }
 
-            // Check stock availability
-            $product = $cartItem->product; // Uses getProductAttribute() method
-            if ($product && $product->stock_quantity < $quantity) {
-                session()->flash('error', 'Insufficient stock. Available: ' . $product->stock_quantity);
-                $this->isLoading = false;
+            // Get product from MongoDB to check stock
+            $product = $cartItem->product;
+            if (!$product) {
+                session()->flash('error', 'Product no longer available');
                 return;
             }
 
-            $cartItem->updateQuantity($quantity);
-            $this->refreshCart();
+            // Check maximum quantity limits: 3 items OR stock quantity (whichever is lower)
+            $maxAllowed = 3;
+            if (isset($product->stock_quantity)) {
+                $maxAllowed = min(3, $product->stock_quantity);
+            }
+
+            if ($quantity > $maxAllowed) {
+                if ($maxAllowed < 3) {
+                    session()->flash('error', "Only {$maxAllowed} items available in stock");
+                } else {
+                    session()->flash('error', "Maximum 3 items per product allowed");
+                }
+                return;
+            }
+
+            // Check if enough stock is available
+            if (isset($product->stock_quantity) && $product->stock_quantity < $quantity) {
+                session()->flash('error', "Insufficient stock. Available: {$product->stock_quantity}");
+                return;
+            }
+
+            // Update the quantity directly in database
+            $cartItem->update(['quantity' => $quantity]);
+            
+            // Refresh the component's data immediately
+            $this->mount();
+            
+            // Dispatch multiple events for cart counter updates
+            $this->dispatch('cart-updated');
+            $this->dispatch('refreshCartCount');
             
             session()->flash('success', 'Cart updated successfully');
 
         } catch (\Exception $e) {
+            \Log::error('Update quantity error: ' . $e->getMessage());
             session()->flash('error', 'Failed to update cart');
         }
-
-        $this->isLoading = false;
     }
 
     public function removeItem($cartItemId)
@@ -98,18 +177,24 @@ class ShoppingCart extends Component
                 return;
             }
 
+            $productName = $cartItem->product_name;
             $cartItem->delete();
+            
+            // Remove from selected items if it was selected
+            $this->selectedItems = array_values(array_diff($this->selectedItems, [$cartItemId]));
+            
+            // Refresh cart immediately
             $this->refreshCart();
             
-            // Real-time event broadcasting
+            // Dispatch events for other components
             $this->dispatch('cart-updated');
-            $this->dispatch('show-notification', [
-                'type' => 'success',
-                'message' => 'Item removed from cart'
-            ]);
-            session()->flash('success', 'Item removed from cart');
+            $this->dispatch('refreshCartCount');
+            $this->dispatch('item-removed', ['itemId' => $cartItemId, 'productName' => $productName]);
+            
+            session()->flash('success', "{$productName} removed from cart");
 
         } catch (\Exception $e) {
+            \Log::error('Remove item error: ' . $e->getMessage());
             session()->flash('error', 'Failed to remove item');
         }
 
@@ -147,35 +232,188 @@ class ShoppingCart extends Component
         return $this->cartItems->sum('quantity');
     }
     
-    public function toggleItemSelection($cartItemId)
+    public function updatedSelectAll($value)
     {
-        if (in_array($cartItemId, $this->selectedItems)) {
-            $this->selectedItems = array_diff($this->selectedItems, [$cartItemId]);
+        if ($value) {
+            // Select all items
+            $this->selectedItems = $this->cartItems->pluck('id')->toArray();
         } else {
-            $this->selectedItems[] = $cartItemId;
+            // Deselect all items
+            $this->selectedItems = [];
         }
         
-        // Update select all checkbox state
-        $this->selectAll = count($this->selectedItems) === $this->cartItems->count();
+        // Force refresh to ensure visual state updates
+        $this->dispatch('selection-updated');
+    }
+    
+    public function updatedSelectedItems()
+    {
+        // This Livewire hook runs whenever selectedItems property is updated
+        // Ensure all items in selectedItems are strings for consistency
+        $this->selectedItems = array_map('strval', $this->selectedItems ?? []);
+        
+        $count = count($this->selectedItems);
+        $hasSelected = $count > 0;
+        
+        $logMessage = "updatedSelectedItems hook triggered - Count: " . $count . ", HasSelected: " . ($hasSelected ? 'true' : 'false');
+        \Log::info($logMessage);
+        
+        // Dispatch event for JavaScript console logging
+        $this->dispatch('selection-updated', [
+            'count' => $count,
+            'hasSelected' => $hasSelected,
+            'items' => $this->selectedItems,
+            'message' => $logMessage
+        ]);
+        
+        $this->selectionVersion++; // Force reactivity
+        $this->updateSelectAllState();
+    }
+    
+    public function updateSelectAllState()
+    {
+        // Ensure selected items is always an array
+        if (!is_array($this->selectedItems)) {
+            $this->selectedItems = [];
+        }
+        
+        // Clean up selectedItems - remove any items that no longer exist
+        $validItemIds = $this->cartItems->pluck('id')->map(function($id) {
+            return (string) $id; // Keep as string for wire:model compatibility
+        })->toArray();
+        
+        // Convert selected items to strings and filter valid ones
+        $this->selectedItems = array_map('strval', $this->selectedItems);
+        $this->selectedItems = array_intersect($this->selectedItems, $validItemIds);
+        $this->selectedItems = array_values($this->selectedItems); // Re-index array
+        
+        // Update select all state
+        $totalItems = $this->cartItems->count();
+        $selectedCount = count($this->selectedItems);
+        
+        // Set selectAll to true only if all items are selected and we have items
+        $previousSelectAll = $this->selectAll;
+        $this->selectAll = ($selectedCount === $totalItems && $totalItems > 0);
+        
+        // Log for debugging
+        \Log::info("updateSelectAllState: Total={$totalItems}, Selected={$selectedCount}, SelectAll changed from {$previousSelectAll} to {$this->selectAll}");
     }
     
     public function toggleSelectAll()
     {
         if ($this->selectAll) {
-            $this->selectedItems = $this->cartItems->pluck('id')->toArray();
-        } else {
+            // If currently checked, uncheck all items
             $this->selectedItems = [];
+            $this->selectAll = false;
+        } else {
+            // If currently unchecked, select all items
+            // Ensure all IDs are stored as strings to match wire:model values
+            $this->selectedItems = $this->cartItems->pluck('id')->map(function($id) {
+                return (string) $id; // Convert to string for wire:model compatibility
+            })->toArray();
+            $this->selectAll = true;
         }
+        
+        // Single reactivity update
+        $this->selectionVersion++;
+        
+        // Log for debugging
+        \Log::info("toggleSelectAll: SelectAll={$this->selectAll}, SelectedItems=" . json_encode($this->selectedItems));
     }
     
-    public function getSelectedTotalProperty()
+    public function toggleItem($itemId)
     {
-        return $this->cartItems->whereIn('id', $this->selectedItems)->sum('total_price');
+        // Convert to integer for consistent comparison
+        $itemId = (int) $itemId;
+        
+        if (in_array($itemId, $this->selectedItems)) {
+            // Remove item from selection
+            $this->selectedItems = array_values(array_diff($this->selectedItems, [$itemId]));
+        } else {
+            // Add item to selection
+            $this->selectedItems[] = $itemId;
+        }
+        
+        // Manually trigger the updatedSelectedItems hook since we're using wire:click instead of wire:model
+        $this->updatedSelectedItems();
+        
+        // Force Livewire to re-render the component
+        $this->dispatch('selection-updated');
+        
+        // Log for debugging
+        \Log::info("toggleItem: ItemId={$itemId}, SelectedItems=" . json_encode($this->selectedItems) . ", Count=" . count($this->selectedItems));
     }
     
-    public function getSelectedItemsCountProperty()
+    #[Computed]
+    public function selectedTotal()
+    {
+        // Convert selectedItems to integers for database comparison
+        $selectedIds = array_map('intval', $this->selectedItems ?? []);
+        $selectedItems = $this->cartItems->whereIn('id', $selectedIds);
+        return $selectedItems->sum('total_price');
+    }
+    
+    #[Computed]
+    public function selectedItemsCount()
     {
         return count($this->selectedItems);
+    }
+    
+    public function refreshComponent()
+    {
+        // Force component refresh - useful for resolving reactivity issues
+        $this->updateSelectAllState();
+        $this->dispatch('selection-updated');
+    }
+    
+    public function clearSelection()
+    {
+        $this->selectedItems = [];
+        $this->selectAll = false;
+        $this->selectionVersion++;
+        $this->updatedSelectedItems();
+    }
+    
+    #[Computed]
+    public function subtotal()
+    {
+        return $this->cartItems->sum('total_price');
+    }
+
+    #[Computed]
+    public function tax()
+    {
+        return $this->subtotal * 0.10; // 10% tax rate
+    }
+
+    #[Computed]
+    public function shipping()
+    {
+        return $this->subtotal > 100 ? 0 : 10.00; // Free shipping over $100
+    }
+
+    #[Computed]
+    public function total()
+    {
+        return ($this->subtotal - $this->discount) + $this->tax + $this->shipping;
+    }
+    
+    #[Computed]
+    public function selectedShipping()
+    {
+        return $this->selectedTotal > 100 ? 0 : 10.00; // Free shipping over $100
+    }
+    
+    #[Computed]
+    public function selectedTax()
+    {
+        return $this->selectedTotal * 0.10; // 10% tax rate
+    }
+    
+    #[Computed]
+    public function selectedFinalTotal()
+    {
+        return $this->selectedTotal + $this->selectedShipping + $this->selectedTax;
     }
 
     public function proceedToCheckout()
@@ -228,45 +466,19 @@ class ShoppingCart extends Component
     {
         session()->flash('message', 'Button click works! Cart has ' . $this->cartItems->count() . ' items.');
     }
-
-    public function getSubtotalProperty()
+    
+    #[On('cart-updated')]
+    public function handleCartUpdated()
     {
-        return $this->cartItems->sum('total_price');
-    }
-
-    public function getTaxProperty()
-    {
-        return $this->subtotal * 0.08; // 8% tax rate
+        $this->refreshCart();
     }
 
-    public function getShippingProperty()
+    #[On('refreshCartCount')]
+    public function handleRefreshCartCount()
     {
-        return $this->subtotal > 100 ? 0 : 10.00; // Free shipping over $100
+        $this->refreshCart();
     }
 
-    public function getTotalProperty()
-    {
-        return ($this->subtotal - $this->discount) + $this->tax + $this->shipping;
-    }
-    
-    // Selected items shipping calculation
-    public function getSelectedShippingProperty()
-    {
-        return $this->selectedTotal > 100 ? 0 : 10.00; // Free shipping over $100
-    }
-    
-    // Selected items tax calculation
-    public function getSelectedTaxProperty()
-    {
-        return $this->selectedTotal * 0.08; // 8% tax rate
-    }
-    
-    // Selected items final total
-    public function getSelectedFinalTotalProperty()
-    {
-        return $this->selectedTotal + $this->selectedShipping + $this->selectedTax;
-    }
-    
     #[On('add-to-cart')]
     public function handleAddToCart($productId)
     {

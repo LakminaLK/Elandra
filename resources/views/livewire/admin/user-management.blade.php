@@ -1,4 +1,15 @@
 <div class="p-6">
+    <!-- Loading Overlay -->
+    <div wire:loading.flex class="fixed inset-0 bg-black bg-opacity-50 z-50 items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-2xl p-8 flex items-center space-x-4 shadow-2xl animate-scale-in">
+            <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+            <div class="text-gray-700">
+                <p class="font-semibold text-lg">Loading users...</p>
+                <p class="text-sm text-gray-500">Please wait while we fetch the latest user data</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Flash Messages -->
     @if (session()->has('message'))
         <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
@@ -313,4 +324,15 @@
             </div>
         </div>
     @endif
+
+    <style>
+        @keyframes scale-in {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-scale-in {
+            animation: scale-in 0.5s ease-out forwards;
+        }
+    </style>
 </div>

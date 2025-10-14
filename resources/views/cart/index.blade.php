@@ -199,34 +199,16 @@
 document.addEventListener('livewire:initialized', () => {
     // Listen for item removed event
     Livewire.on('item-removed', (event) => {
-        // Refresh the page after a short delay to show updated cart
-        setTimeout(() => {
-            window.location.reload();
-        }, 500);
+        // Item removed successfully
     });
     
-    // Listen for cart updated event
+    // Listen for cart updated event  
     Livewire.on('cart-updated', (event) => {
-        // Refresh cart totals component
-        Livewire.dispatch('$refresh');
+        // Cart updated successfully
     });
 });
 
-// Alternative event listener for older Livewire versions
-document.addEventListener('DOMContentLoaded', function() {
-    window.livewire?.on('item-removed', () => {
-        setTimeout(() => {
-            window.location.reload();
-        }, 500);
-    });
-    
-    window.livewire?.on('cart-updated', () => {
-        // Force refresh of cart totals
-        if (window.Livewire) {
-            window.Livewire.emit('refreshComponent');
-        }
-    });
-});
+
 </script>
 @endpush
 

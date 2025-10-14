@@ -34,8 +34,8 @@ unset($__defined_vars, $__key, $__value); ?>
         hasCode: <?php echo e($frame->snippet() ? 'true' : 'false'); ?>
 
     }"
-    class="group rounded-lg border border-neutral-200 shadow-xs"
-    :class="expanded ? 'dark:border-white/10' : 'dark:border-white/5'"
+    class="group rounded-lg border border-neutral-200 dark:border-white/10 shadow-xs"
+    :class="{ 'dark:border-white/5': expanded }"
 >
     <div
         class="flex h-11 items-center gap-3 bg-white pr-2.5 pl-4 overflow-x-auto dark:bg-white/3"
@@ -154,7 +154,7 @@ unset($__defined_vars, $__key, $__value); ?>
         </div>
     </div>
 
-    <?php if($snippet = $frame->snippet()): ?>
+    <!--[if BLOCK]><![endif]--><?php if($snippet = $frame->snippet()): ?>
         <?php if (isset($component)) { $__componentOriginala7df34c267a7ce6efa01f63b793ef234 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginala7df34c267a7ce6efa01f63b793ef234 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'laravel-exceptions-renderer::components.frame-code','data' => ['code' => $snippet,'highlightedLine' => $frame->line(),'xShow' => 'expanded']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -175,6 +175,6 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php $component = $__componentOriginala7df34c267a7ce6efa01f63b793ef234; ?>
 <?php unset($__componentOriginala7df34c267a7ce6efa01f63b793ef234); ?>
 <?php endif; ?>
-    <?php endif; ?>
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 </div>
 <?php /**PATH C:\xampp\htdocs\Elandra\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/frame.blade.php ENDPATH**/ ?>

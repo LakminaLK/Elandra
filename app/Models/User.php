@@ -30,7 +30,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'phone',
+        'mobile',
         'address',
         'city',
         'country',
@@ -154,11 +154,49 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's initials for avatar display.
+     */
+    public function getInitialsAttribute()
+    {
+        $nameParts = explode(' ', trim($this->name));
+        $initials = '';
+        
+        // Get first letter of first name
+        if (isset($nameParts[0])) {
+            $initials .= strtoupper(substr($nameParts[0], 0, 1));
+        }
+        
+        // Get first letter of last name (if exists)
+        if (isset($nameParts[1])) {
+            $initials .= strtoupper(substr($nameParts[1], 0, 1));
+        } elseif (strlen($nameParts[0]) > 1) {
+            // If no last name, use second letter of first name
+            $initials .= strtoupper(substr($nameParts[0], 1, 1));
+        }
+        
+        return $initials;
+    }
+
+    /**
+     * Get the URL to the user's profile photo.
+     */
+    public function getProfilePhotoUrlAttribute()
+    {
+        if ($this->profile_photo_path) {
+            return asset('storage/' . $this->profile_photo_path);
+        }
+        
+        // Return a default avatar using the user's initials
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=7F9CF5&background=EBF4FF';
+    }
+
+    /**
      * The accessors to append to the model's array form.
      *
      * @var array<int, string>
      */
     protected $appends = [
         'profile_photo_url',
+        'initials',
     ];
 }

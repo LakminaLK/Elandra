@@ -30,18 +30,18 @@ unset($__defined_vars, $__key, $__value); ?>
 
 <div class="flex flex-col gap-3">
     <h2 class="text-lg font-semibold">Routing parameters</h2>
-    <?php if($routeParameters): ?>
+    <!--[if BLOCK]><![endif]--><?php if($routeParameters): ?>
     <div class="bg-white dark:bg-white/[2%] border border-neutral-200 dark:border-neutral-800 rounded-md overflow-x-auto p-5 text-sm font-mono shadow-xs">
         <?php if (isset($component)) { $__componentOriginal12cb286571f553eebcbe98210b217f94 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal12cb286571f553eebcbe98210b217f94 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'laravel-exceptions-renderer::components.syntax-highlight','data' => ['code' => $routeParameters,'grammar' => 'json']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'laravel-exceptions-renderer::components.syntax-highlight','data' => ['code' => $routeParameters,'language' => 'json']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('laravel-exceptions-renderer::syntax-highlight'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['code' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($routeParameters),'grammar' => 'json']); ?>
+<?php $component->withAttributes(['code' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($routeParameters),'language' => 'json']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal12cb286571f553eebcbe98210b217f94)): ?>
@@ -74,6 +74,6 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php $component = $__componentOriginal612ffe32146e3bd2ac6ba6076cca9520; ?>
 <?php unset($__componentOriginal612ffe32146e3bd2ac6ba6076cca9520); ?>
 <?php endif; ?>
-    <?php endif; ?>
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 </div>
 <?php /**PATH C:\xampp\htdocs\Elandra\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/routing-parameter.blade.php ENDPATH**/ ?>

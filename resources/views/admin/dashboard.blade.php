@@ -17,37 +17,37 @@
                 $cards = [
                     [
                         'label' => 'Total Products',
-                        'count' => \App\Models\MongoProduct::count() ?? 8,
+                        'count' => $stats['total_products'],
                         'bg' => 'bg-blue-500',
                         'hover' => 'hover:bg-blue-600'
                     ],
                     [
-                        'label' => 'Total Orders',
-                        'count' => 1247,
+                        'label' => 'Total Brands',
+                        'count' => $stats['total_brands'],
                         'bg' => 'bg-green-500',
                         'hover' => 'hover:bg-green-600'
                     ],
                     [
                         'label' => 'Total Categories',
-                        'count' => \App\Models\MongoCategory::count() ?? 6,
+                        'count' => $stats['total_categories'],
                         'bg' => 'bg-purple-500',
                         'hover' => 'hover:bg-purple-600'
                     ],
                     [
-                        'label' => 'Total Users',
-                        'count' => \App\Models\User::count() ?? 24,
+                        'label' => 'Total Customers',
+                        'count' => $stats['total_customers'],
                         'bg' => 'bg-red-500',
                         'hover' => 'hover:bg-red-600'
                     ],
                     [
-                        'label' => 'Total Customers',
-                        'count' => \App\Models\User::count() ?? 24,
+                        'label' => 'Total Orders',
+                        'count' => $stats['total_orders'],
                         'bg' => 'bg-indigo-500',
                         'hover' => 'hover:bg-indigo-600'
                     ],
                     [
-                        'label' => 'Revenue (Last 30 Days)',
-                        'count' => '$24,580.00',
+                        'label' => 'Total Revenue',
+                        'count' => '$' . number_format($stats['revenue'], 2),
                         'bg' => 'bg-orange-500',
                         'hover' => 'hover:bg-orange-600',
                         'isRevenue' => true
@@ -63,17 +63,21 @@
                                 <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                                 </svg>
-                            @elseif($card['label'] == 'Total Orders')
+                            @elseif($card['label'] == 'Total Brands')
                                 <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z"/>
+                                    <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                                 </svg>
                             @elseif($card['label'] == 'Total Categories')
                                 <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                                 </svg>
-                            @elseif($card['label'] == 'Total Users' || $card['label'] == 'Total Customers')
+                            @elseif($card['label'] == 'Total Customers')
                                 <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                </svg>
+                            @elseif($card['label'] == 'Total Orders')
+                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z"/>
                                 </svg>
                             @else
                                 <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -129,12 +133,14 @@
 document.addEventListener('DOMContentLoaded', function() {
     const ctx = document.getElementById('revenueChart').getContext('2d');
     
-    // Sample data for the chart - similar to TripMate style
+    // Real data from the controller
+    const revenueData = @json($revenueChartData);
+    
     const chartData = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        labels: revenueData.last_year.labels,
         datasets: [{
             label: 'Revenue ($)',
-            data: [12500, 18750, 15300, 22100, 19800, 25600, 28900, 32100, 29500, 35200, 38700, 42300],
+            data: revenueData.last_year.data,
             backgroundColor: 'rgba(59, 130, 246, 0.1)',
             borderColor: 'rgba(59, 130, 246, 1)',
             borderWidth: 3,
@@ -225,20 +231,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         switch(period) {
             case 'last_7_days':
-                newLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-                newData = [1200, 1800, 1500, 2200, 1980, 2560, 2100];
+                newLabels = revenueData.last_7_days.labels;
+                newData = revenueData.last_7_days.data;
                 break;
             case 'last_month':
-                newLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
-                newData = [8500, 12750, 10300, 15100];
+                newLabels = revenueData.last_month.labels;
+                newData = revenueData.last_month.data;
                 break;
             case 'last_3_months':
-                newLabels = ['3 months ago', '2 months ago', 'Last month'];
-                newData = [45200, 52100, 48900];
+                newLabels = revenueData.last_3_months.labels;
+                newData = revenueData.last_3_months.data;
                 break;
             case 'last_year':
-                newLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                newData = [12500, 18750, 15300, 22100, 19800, 25600, 28900, 32100, 29500, 35200, 38700, 42300];
+                newLabels = revenueData.last_year.labels;
+                newData = revenueData.last_year.data;
                 break;
         }
 

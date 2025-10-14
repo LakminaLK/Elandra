@@ -196,9 +196,9 @@
         <!-- Navigation -->
         <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50 transition-all duration-300">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center h-20">
-                    <!-- Logo -->
-                    <div class="flex items-center">
+                <div class="flex items-center h-20">
+                    <!-- Logo - Fixed width -->
+                    <div class="flex items-center w-64 flex-shrink-0">
                         <a href="{{ route('home') }}" class="flex items-center space-x-3 group">
                             <div class="relative">
                                 <div class="absolute -inset-1 bg-gradient-to-r from-primary-light to-secondary rounded-full blur-sm opacity-70 group-hover:opacity-100 transition-all duration-300"></div>
@@ -210,32 +210,32 @@
 
                     <!-- Centered Navigation -->
                     <div class="hidden md:flex items-center justify-center flex-1">
-                        <div class="flex items-center space-x-1">
-                            <a href="{{ route('home') }}" class="relative px-5 py-3 text-sm font-medium transition-all overflow-hidden group {{ request()->routeIs('home') ? 'text-primary border-b-2 border-primary' : 'text-gray-700 hover:text-primary' }}">
-                                <span class="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full duration-300"></span>
+                        <div class="flex items-center space-x-8">
+                            <a href="{{ route('home') }}" class="relative px-3 py-3 text-sm font-medium transition-all overflow-hidden group {{ request()->routeIs('home') ? 'text-primary border-b-2 border-primary' : 'text-gray-700 hover:text-primary' }}">
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full duration-300"></span>
                                 <span class="relative">Home</span>
                             </a>
-                            <a href="{{ route('products.index') }}" class="relative px-5 py-3 text-sm font-medium transition-all overflow-hidden group {{ request()->routeIs('products.index') ? 'text-primary border-b-2 border-primary' : 'text-gray-700 hover:text-primary' }}">
-                                <span class="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full duration-300"></span>
+                            <a href="{{ route('products.index') }}" class="relative px-3 py-3 text-sm font-medium transition-all overflow-hidden group {{ request()->routeIs('products.index') ? 'text-primary border-b-2 border-primary' : 'text-gray-700 hover:text-primary' }}">
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full duration-300"></span>
                                 <span class="relative">Products</span>
                             </a>
-                            <a href="#" class="relative px-5 py-3 text-sm font-medium transition-all overflow-hidden group">
-                                <span class="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full duration-300"></span>
+                            <a href="#" class="relative px-3 py-3 text-sm font-medium transition-all overflow-hidden group text-gray-700 hover:text-primary">
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full duration-300"></span>
                                 <span class="relative">Categories</span>
                             </a>
-                            <a href="#" class="relative px-5 py-3 text-sm font-medium transition-all overflow-hidden group">
-                                <span class="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full duration-300"></span>
+                            <a href="#" class="relative px-3 py-3 text-sm font-medium transition-all overflow-hidden group text-gray-700 hover:text-primary">
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full duration-300"></span>
                                 <span class="relative">About</span>
                             </a>
-                            <a href="#" class="relative px-5 py-3 text-sm font-medium transition-all overflow-hidden group">
-                                <span class="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-primary to-accent transition-all group-hover:w-full duration-300"></span>
+                            <a href="#" class="relative px-3 py-3 text-sm font-medium transition-all overflow-hidden group text-gray-700 hover:text-primary">
+                                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full duration-300"></span>
                                 <span class="relative">Contact</span>
                             </a>
                         </div>
                     </div>
 
-                    <!-- Right Side - Cart & Profile Only -->
-                    <div class="flex items-center space-x-4">
+                    <!-- Right Side - Fixed width to match left -->
+                    <div class="flex items-center justify-end space-x-4 w-64 flex-shrink-0">
 
                         @auth
                             <!-- Cart Button -->
@@ -263,9 +263,15 @@
                                         <!-- User Info Header -->
                                         <div class="px-4 py-3 border-b border-gray-100">
                                             <div class="flex items-center space-x-3">
-                                                <div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-medium">
-                                                    {{ substr(auth()->user()->name, 0, 1) }}
-                                                </div>
+                                                @if(auth()->user()->profile_photo_path && file_exists(storage_path('app/public/' . auth()->user()->profile_photo_path)))
+                                                    <img src="{{ asset('storage/' . auth()->user()->profile_photo_path) }}" 
+                                                         alt="{{ auth()->user()->name }}" 
+                                                         class="w-10 h-10 rounded-full object-cover border-2 border-gray-200">
+                                                @else
+                                                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                                                        {{ auth()->user()->initials }}
+                                                    </div>
+                                                @endif
                                                 <div>
                                                     <div class="font-semibold text-gray-800">{{ auth()->user()->name }}</div>
                                                     <div class="text-sm text-gray-500">{{ auth()->user()->email }}</div>
@@ -304,15 +310,15 @@
                             </div>
                         @else
                             <!-- Login & Signup Buttons for Guest Users -->
-                            <div class="flex items-center space-x-3">
-                                <a href="{{ route('login') }}" class="inline-flex items-center px-6 py-3 border-2 border-gray-300 rounded-full text-sm font-semibold text-gray-700 bg-white hover:bg-gray-50 hover:border-blue-500 hover:text-blue-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:translate-y-[-1px] hover:scale-105 group">
-                                    <i class="fas fa-sign-in-alt mr-3 group-hover:scale-110 transition-transform duration-300 text-base"></i>
-                                    <span class="font-semibold">Login</span>
+                            <div class="flex items-center space-x-2">
+                                <a href="{{ route('login') }}" class="inline-flex items-center px-4 py-2.5 border-2 border-gray-300 rounded-full text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 hover:border-blue-500 hover:text-blue-600 transition-all duration-300 shadow-md hover:shadow-lg transform hover:translate-y-[-1px] group">
+                                    <i class="fas fa-sign-in-alt mr-2 group-hover:scale-110 transition-transform duration-300"></i>
+                                    <span>Login</span>
                                 </a>
                                 
-                                <a href="{{ route('register') }}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 hover:from-blue-700 hover:via-purple-700 hover:to-blue-800 text-white rounded-full text-sm font-semibold shadow-xl hover:shadow-2xl transform hover:translate-y-[-1px] hover:scale-105 transition-all duration-300 group border-2 border-blue-500/20">
-                                    <i class="fas fa-user-plus mr-3 group-hover:scale-110 transition-transform duration-300 text-base"></i>
-                                    <span class="font-semibold">Sign Up</span>
+                                <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full text-sm font-medium shadow-lg hover:shadow-xl transform hover:translate-y-[-1px] transition-all duration-300 group whitespace-nowrap">
+                                    <i class="fas fa-user-plus mr-2 group-hover:scale-110 transition-transform duration-300"></i>
+                                    <span>Sign Up</span>
                                 </a>
                             </div>
                         @endauth

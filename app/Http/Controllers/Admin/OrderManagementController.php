@@ -10,47 +10,11 @@ use Illuminate\Http\Request;
 class OrderManagementController extends Controller
 {
     /**
-     * Display a listing of orders with filtering and search
+     * Display a listing of orders with Livewire component
      */
-    public function index(Request $request)
+    public function index()
     {
-        $query = Order::with(['user', 'orderItems']);
-        
-        // Search functionality
-        if ($request->filled('search')) {
-            $searchTerm = $request->search;
-            $query->where(function($q) use ($searchTerm) {
-                $q->where('order_number', 'like', "%{$searchTerm}%")
-                  ->orWhere('id', 'like', "%{$searchTerm}%")
-                  ->orWhereHas('user', function($userQuery) use ($searchTerm) {
-                      $userQuery->where('name', 'like', "%{$searchTerm}%")
-                               ->orWhere('email', 'like', "%{$searchTerm}%");
-                  });
-            });
-        }
-        
-        // Status filter
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-        
-        // Payment status filter
-        if ($request->filled('payment_status')) {
-            $query->where('payment_status', $request->payment_status);
-        }
-        
-        // Date range filter
-        if ($request->filled('date_from')) {
-            $query->whereDate('created_at', '>=', $request->date_from);
-        }
-        
-        if ($request->filled('date_to')) {
-            $query->whereDate('created_at', '<=', $request->date_to);
-        }
-        
-        $orders = $query->orderBy('created_at', 'desc')->paginate(15);
-        
-        return view('admin.orders.index', compact('orders'));
+        return view('admin.orders.index');
     }
 
     /**
@@ -149,8 +113,12 @@ class OrderManagementController extends Controller
         // If order is cancelled, restore stock
         if ($newStatus === 'cancelled' && $oldStatus !== 'cancelled') {
             foreach ($order->orderItems as $item) {
-                if ($item->product) {
-                    $item->product->increment('stock_quantity', $item->quantity);
+                // Only increment if product() is a relationship, not null
+                if (method_exists($item, 'product') && $item->product() && $item->product instanceof \Illuminate\Database\Eloquent\Relations\Relation) {
+                    $product = $item->product;
+                    if ($product) {
+                        $product->increment('stock_quantity', $item->quantity);
+                    }
                 }
             }
         }

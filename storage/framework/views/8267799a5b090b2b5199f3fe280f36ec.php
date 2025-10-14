@@ -1,4 +1,15 @@
-<div class="p-6">
+<div>
+    <!-- Loading Overlay -->
+    <div wire:loading.flex class="fixed inset-0 bg-black bg-opacity-50 z-50 items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-2xl p-8 flex items-center space-x-4 shadow-2xl animate-scale-in">
+            <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+            <div class="text-gray-700">
+                <p class="font-semibold text-lg">Loading categories & brands...</p>
+                <p class="text-sm text-gray-500">Please wait while we fetch the latest data</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Success Message -->
     <!--[if BLOCK]><![endif]--><?php if(session()->has('message')): ?>
         <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg" x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 5000)">
@@ -15,135 +26,202 @@
         </div>
     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
-    <!-- Page Header -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Category & Brand Management</h1>
-        <p class="text-gray-600 mt-2">Manage product categories and brands</p>
+    <!-- Header with Create Buttons -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Category & Brand Management</h1>
+            <p class="text-gray-600 mt-1">Manage product categories and brands</p>
+        </div>
+        <div class="flex space-x-3">
+            <button wire:click="openCreateCategoryModal" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105">
+                <i class="fas fa-plus text-lg"></i>
+                <span>Add Category</span>
+            </button>
+            <button wire:click="openCreateBrandModal" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 flex items-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105">
+                <i class="fas fa-plus text-lg"></i>
+                <span>Add Brand</span>
+            </button>
+        </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Search Filters -->
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Category Search -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Search Categories</label>
+                <input 
+                    type="text" 
+                    wire:model.live.debounce.300ms="categorySearch" 
+                    placeholder="Search categories..."
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+            </div>
+
+            <!-- Brand Search -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Search Brands</label>
+                <input 
+                    type="text" 
+                    wire:model.live.debounce.300ms="brandSearch" 
+                    placeholder="Search brands..."
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <!-- Categories Section -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-            <div class="p-6 border-b border-gray-200">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-semibold text-gray-900">Categories</h2>
-                    <button wire:click="openCreateCategoryModal" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
-                        <i class="fas fa-plus"></i>
-                        <span>Add Category</span>
-                    </button>
-                </div>
-                <div class="mt-4">
-                    <input type="text" wire:model.live="categorySearch" placeholder="Search categories..." 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <i class="fas fa-tags text-blue-600 mr-2"></i>
+                    Categories
+                </h2>
             </div>
             
-            <div class="p-6">
+            <div class="overflow-x-auto">
                 <!--[if BLOCK]><![endif]--><?php if($categories->count() > 0): ?>
-                    <div class="space-y-3">
-                        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                                <div class="flex-1">
-                                    <h3 class="font-medium text-gray-900"><?php echo e($category->name); ?></h3>
-                                    <!--[if BLOCK]><![endif]--><?php if($category->description): ?>
-                                        <p class="text-sm text-gray-500 mt-1"><?php echo e($category->description); ?></p>
-                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-                                    <div class="flex items-center mt-2">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Name
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status
+                                </th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900"><?php echo e($category->name); ?></div>
+                                            <!--[if BLOCK]><![endif]--><?php if($category->description): ?>
+                                                <div class="text-sm text-gray-500 mt-1"><?php echo e(Str::limit($category->description, 60)); ?></div>
+                                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo e($category->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'); ?>">
                                             <?php echo e($category->is_active ? 'Active' : 'Inactive'); ?>
 
                                         </span>
-                                    </div>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <button wire:click="openEditCategoryModal('<?php echo e($category->_id); ?>')" 
-                                            class="inline-flex items-center px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg text-sm font-medium transition-colors">
-                                        <i class="fas fa-edit mr-1"></i>
-                                        Edit
-                                    </button>
-                                    <button wire:click="deleteCategory('<?php echo e($category->_id); ?>')" 
-                                            onclick="return confirm('Are you sure you want to delete this category?')"
-                                            class="inline-flex items-center px-3 py-1 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg text-sm font-medium transition-colors">
-                                        <i class="fas fa-trash mr-1"></i>
-                                        Delete
-                                    </button>
-                                </div>
-                            </div>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
-                    </div>
-                    <div class="mt-6">
-                        <?php echo e($categories->links()); ?>
-
-                    </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right text-sm font-medium">
+                                        <div class="flex items-center justify-end space-x-2">
+                                            <button wire:click="openEditCategoryModal('<?php echo e($category->_id); ?>')" 
+                                                    class="text-blue-600 hover:text-blue-900 transition-colors">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button wire:click="deleteCategory('<?php echo e($category->_id); ?>')" 
+                                                    onclick="return confirm('Are you sure you want to delete this category?')"
+                                                    class="text-red-600 hover:text-red-900 transition-colors">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                        </tbody>
+                    </table>
                 <?php else: ?>
-                    <div class="text-center py-8">
+                    <div class="text-center py-12">
                         <i class="fas fa-tags text-gray-400 text-4xl mb-4"></i>
-                        <p class="text-gray-500">No categories found. Create your first category!</p>
+                        <p class="text-gray-500 text-lg">No categories found</p>
+                        <p class="text-gray-400 text-sm">Create your first category to get started</p>
                     </div>
                 <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             </div>
+            
+            <!--[if BLOCK]><![endif]--><?php if($categories->hasPages()): ?>
+                <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                    <?php echo e($categories->links()); ?>
+
+                </div>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
         </div>
 
         <!-- Brands Section -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200">
-            <div class="p-6 border-b border-gray-200">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-xl font-semibold text-gray-900">Brands</h2>
-                    <button wire:click="openCreateBrandModal" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center space-x-2 shadow-md hover:shadow-lg">
-                        <i class="fas fa-plus"></i>
-                        <span>Add Brand</span>
-                    </button>
-                </div>
-                <div class="mt-4">
-                    <input type="text" wire:model.live="brandSearch" placeholder="Search brands..." 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
-                </div>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-lg font-semibold text-gray-900 flex items-center">
+                    <i class="fas fa-bookmark text-green-600 mr-2"></i>
+                    Brands
+                </h2>
             </div>
             
-            <div class="p-6">
+            <div class="overflow-x-auto">
                 <!--[if BLOCK]><![endif]--><?php if($brands->count() > 0): ?>
-                    <div class="space-y-3">
-                        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                                <div class="flex-1">
-                                    <h3 class="font-medium text-gray-900"><?php echo e($brand->name); ?></h3>
-                                    <!--[if BLOCK]><![endif]--><?php if($brand->description): ?>
-                                        <p class="text-sm text-gray-500 mt-1"><?php echo e($brand->description); ?></p>
-                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-                                    <div class="flex items-center mt-2">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Name
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status
+                                </th>
+                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $brands; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $brand): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div>
+                                            <div class="text-sm font-medium text-gray-900"><?php echo e($brand->name); ?></div>
+                                            <!--[if BLOCK]><![endif]--><?php if($brand->description): ?>
+                                                <div class="text-sm text-gray-500 mt-1"><?php echo e(Str::limit($brand->description, 60)); ?></div>
+                                            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo e($brand->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'); ?>">
                                             <?php echo e($brand->is_active ? 'Active' : 'Inactive'); ?>
 
                                         </span>
-                                    </div>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <button wire:click="openEditBrandModal('<?php echo e($brand->_id); ?>')" 
-                                            class="inline-flex items-center px-3 py-1 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg text-sm font-medium transition-colors">
-                                        <i class="fas fa-edit mr-1"></i>
-                                        Edit
-                                    </button>
-                                    <button wire:click="deleteBrand('<?php echo e($brand->_id); ?>')" 
-                                            onclick="return confirm('Are you sure you want to delete this brand?')"
-                                            class="inline-flex items-center px-3 py-1 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg text-sm font-medium transition-colors">
-                                        <i class="fas fa-trash mr-1"></i>
-                                        Delete
-                                    </button>
-                                </div>
-                            </div>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
-                    </div>
-                    <div class="mt-6">
-                        <?php echo e($brands->links()); ?>
-
-                    </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right text-sm font-medium">
+                                        <div class="flex items-center justify-end space-x-2">
+                                            <button wire:click="openEditBrandModal('<?php echo e($brand->_id); ?>')" 
+                                                    class="text-blue-600 hover:text-blue-900 transition-colors">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button wire:click="deleteBrand('<?php echo e($brand->_id); ?>')" 
+                                                    onclick="return confirm('Are you sure you want to delete this brand?')"
+                                                    class="text-red-600 hover:text-red-900 transition-colors">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                        </tbody>
+                    </table>
                 <?php else: ?>
-                    <div class="text-center py-8">
+                    <div class="text-center py-12">
                         <i class="fas fa-bookmark text-gray-400 text-4xl mb-4"></i>
-                        <p class="text-gray-500">No brands found. Create your first brand!</p>
+                        <p class="text-gray-500 text-lg">No brands found</p>
+                        <p class="text-gray-400 text-sm">Create your first brand to get started</p>
                     </div>
                 <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             </div>
+            
+            <!--[if BLOCK]><![endif]--><?php if($brands->hasPages()): ?>
+                <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                    <?php echo e($brands->links()); ?>
+
+                </div>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
         </div>
     </div>
 
@@ -278,5 +356,15 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
             </div>
         </div>
     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-</div>
-<?php /**PATH C:\xampp\htdocs\Elandra\resources\views/livewire/admin/category-brand-management.blade.php ENDPATH**/ ?>
+
+    <style>
+        @keyframes scale-in {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-scale-in {
+            animation: scale-in 0.5s ease-out forwards;
+        }
+    </style>
+</div><?php /**PATH C:\xampp\htdocs\Elandra\resources\views/livewire/admin/category-brand-management.blade.php ENDPATH**/ ?>

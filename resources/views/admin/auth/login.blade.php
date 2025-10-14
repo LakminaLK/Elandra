@@ -159,8 +159,8 @@
         <div class="max-w-md w-full space-y-8">
             <!-- Header -->
             <div class="login-animation text-center">
-                <div class="mx-auto h-16 w-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl flex items-center justify-center pulse-border mb-6">
-                    <span class="text-white font-bold text-2xl">E</span>
+                <div class="mx-auto h-16 w-16 bg-white rounded-2xl flex items-center justify-center pulse-border mb-6 shadow-lg">
+                    <img src="{{ asset('elandra-logo.webp') }}" alt="Elandra Logo" class="h-12 w-12 object-contain">
                 </div>
                 <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
                 <p class="text-gray-600">Sign in to your admin account</p>
@@ -168,19 +168,58 @@
 
             <!-- Login Form -->
             <div class="login-animation bg-white rounded-2xl shadow-xl p-8" style="animation-delay: 0.2s;">
-                @if ($errors->any())
-                    <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 fade-in">
+                @if (session('success'))
+                    <div class="mb-6 bg-green-50 border border-green-200 rounded-lg p-4 fade-in">
                         <div class="flex">
-                            <svg class="w-5 h-5 text-red-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <svg class="w-5 h-5 text-green-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             <div class="ml-3">
-                                <h3 class="text-sm font-medium text-red-800">Authentication failed</h3>
-                                <div class="mt-1 text-sm text-red-700">
+                                <p class="text-sm text-green-700">{{ session('success') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                
+                @if ($errors->any())
+                    @php
+                        $isLockout = false;
+                        $lockoutMessage = '';
+                        foreach ($errors->all() as $error) {
+                            if (str_contains($error, 'locked') || str_contains($error, 'attempt')) {
+                                $isLockout = true;
+                                $lockoutMessage = $error;
+                                break;
+                            }
+                        }
+                    @endphp
+                    
+                    <div class="mb-6 {{ $isLockout ? 'bg-orange-50 border-orange-200' : 'bg-red-50 border-red-200' }} border rounded-lg p-4 fade-in">
+                        <div class="flex">
+                            @if ($isLockout)
+                                <svg class="w-5 h-5 text-orange-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                </svg>
+                            @else
+                                <svg class="w-5 h-5 text-red-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            @endif
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium {{ $isLockout ? 'text-orange-800' : 'text-red-800' }}">
+                                    {{ $isLockout ? 'Account Locked' : 'Authentication Failed' }}
+                                </h3>
+                                <div class="mt-1 text-sm {{ $isLockout ? 'text-orange-700' : 'text-red-700' }}">
                                     @foreach ($errors->all() as $error)
                                         <p>{{ $error }}</p>
                                     @endforeach
                                 </div>
+                                @if ($isLockout)
+                                    <div class="mt-2 text-xs text-orange-600">
+                                        <i class="fas fa-info-circle mr-1"></i>
+                                        This is a security measure to protect admin accounts from brute-force attacks.
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -338,5 +377,59 @@
             }
         });
     </script>
+
+    @if ($errors->any())
+        @php
+            $lockoutError = null;
+            $generalErrors = [];
+            foreach ($errors->all() as $error) {
+                if (str_contains($error, 'locked') || str_contains($error, 'temporarily locked')) {
+                    $lockoutError = $error;
+                } else {
+                    $generalErrors[] = $error;
+                }
+            }
+        @endphp
+        
+        <!-- Keep the inline error display but remove toast -->
+        @if ($lockoutError)
+            <div class="mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4 fade-in">
+                <div class="flex">
+                    <svg class="w-5 h-5 text-orange-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-orange-800">Account Locked</h3>
+                        <div class="mt-1 text-sm text-orange-700">
+                            <p>{{ $lockoutError }}</p>
+                        </div>
+                        <div class="mt-2 text-xs text-orange-600">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            This is a security measure to protect admin accounts from brute-force attacks.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        @if (!empty($generalErrors))
+            <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 fade-in">
+                <div class="flex">
+                    <svg class="w-5 h-5 text-red-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">Authentication Failed</h3>
+                        <div class="mt-1 text-sm text-red-700">
+                            @foreach ($generalErrors as $error)
+                                <p>{{ $error }}</p>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endif
+
 </body>
 </html>
