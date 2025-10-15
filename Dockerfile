@@ -81,10 +81,6 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Create nginx and php-fpm log directories
 RUN mkdir -p /var/log/nginx /var/log/php-fpm
 
-# Create health check script
-RUN echo '#!/bin/bash\nif curl -f http://localhost/health >/dev/null 2>&1; then\n  echo "Health check passed"\n  exit 0\nelse\n  echo "Health check failed"\n  exit 1\nfi' > /usr/local/bin/health-check \
-    && chmod +x /usr/local/bin/health-check
-
 # Optimize Laravel for production
 RUN php artisan config:cache || true \
     && php artisan route:cache || true \
@@ -93,9 +89,9 @@ RUN php artisan config:cache || true \
 # Expose port
 EXPOSE 80
 
-# Health check
+# Simple health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD /usr/local/bin/health-check
+    CMD curl -f http://localhost/health || exit 1
 
 # Start supervisor
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

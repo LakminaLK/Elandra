@@ -5,7 +5,6 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\Auth\CustomPasswordResetController;
-use App\Http\Controllers\HealthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Vite;
 
@@ -49,8 +48,11 @@ Route::get('/css-test', function () {
     </html>';
 });
 
-// Health check routes
-Route::get('/health', [HealthController::class, 'simpleHealth'])->name('health.simple');
+// Health check routes - Simple OK response for Railway
+Route::get('/health', function() {
+    return response('OK', 200);
+})->name('health.simple');
+
 Route::get('/health/detailed', [HealthController::class, 'healthCheck'])->name('health.detailed');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
