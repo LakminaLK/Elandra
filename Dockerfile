@@ -81,13 +81,28 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 # Create nginx and php-fpm log directories
 RUN mkdir -p /var/log/nginx /var/log/php-fpm
 
-# Optimize Laravel for production
-RUN php artisan config:cache || true \
-    && php artisan route:cache || true \
-    && php artisan view:cache || true
+# Set proper permissions
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 755 /var/www/html/bootstrap/cache \
+    && chmod -R 755 /var/www/html/public
+
+# Create a simple startup script
+RUN echo '#!/bin/bash\n\
+set -e\n\
+echo "Starting Elandra application..."\n\
+\n\
+# Basic Laravel setup\n\
+php artisan config:clear\n\
+php artisan cache:clear\n\
+php artisan storage:link --force || true\n\
+\n\
+echo "Services starting..."\n\
+exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf\n\
+' > /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
 
 # Expose port
 EXPOSE 80
 
-# Start supervisor (Railway will handle healthcheck)
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Start with the simplified script
+CMD ["/usr/local/bin/start.sh"]
