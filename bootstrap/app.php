@@ -17,6 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Trust proxies for ngrok and other reverse proxies
+        $middleware->trustProxies(at: [
+            \App\Http\Middleware\TrustProxies::class,
+        ]);
+        
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'rate.limit' => \App\Http\Middleware\RateLimitMiddleware::class,

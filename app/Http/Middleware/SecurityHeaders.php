@@ -28,7 +28,9 @@ class SecurityHeaders
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
         }
 
-        // Content Security Policy - use configuration from security.php
+        // Content Security Policy - DISABLED for ngrok compatibility
+        // Temporarily disabled to allow assets to load through ngrok
+        /*
         $cspConfig = config('security.csp', []);
         $csp = collect($cspConfig)->map(function ($value, $key) {
             return $key . ' ' . $value;
@@ -37,6 +39,7 @@ class SecurityHeaders
         if ($csp) {
             $response->headers->set('Content-Security-Policy', $csp);
         }
+        */
 
         return $response;
     }

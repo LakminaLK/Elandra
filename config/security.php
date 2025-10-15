@@ -48,19 +48,20 @@ return [
     |--------------------------------------------------------------------------
     |
     | Define content security policy directives.
+    | When using ngrok, we need to allow assets from the ngrok domain.
     |
     */
     'csp' => [
-        'default-src' => "'self'",
-        'script-src' => "'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com",
-        'style-src' => "'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.bunny.net https://cdnjs.cloudflare.com",
-        'font-src' => "'self' https://fonts.gstatic.com https://fonts.bunny.net https://cdnjs.cloudflare.com",
-        'img-src' => "'self' data: https:",
-        'connect-src' => "'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://ipapi.co",
+        'default-src' => "'self' https://*.ngrok-free.dev https://*.ngrok.app",
+        'script-src' => "'self' 'unsafe-inline' 'unsafe-eval' https://*.ngrok-free.dev https://*.ngrok.app https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com",
+        'style-src' => "'self' 'unsafe-inline' https://*.ngrok-free.dev https://*.ngrok.app https://fonts.googleapis.com https://fonts.bunny.net https://cdnjs.cloudflare.com",
+        'font-src' => "'self' https://*.ngrok-free.dev https://*.ngrok.app https://fonts.gstatic.com https://fonts.bunny.net https://cdnjs.cloudflare.com",
+        'img-src' => "'self' data: https: https://*.ngrok-free.dev https://*.ngrok.app",
+        'connect-src' => "'self' https://*.ngrok-free.dev https://*.ngrok.app https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://ipapi.co",
         'frame-src' => "'none'",
         'object-src' => "'none'",
-        'media-src' => "'self'",
-        'form-action' => "'self'",
+        'media-src' => "'self' https://*.ngrok-free.dev https://*.ngrok.app",
+        'form-action' => "'self' https://*.ngrok-free.dev https://*.ngrok.app",
         'frame-ancestors' => "'none'",
         'base-uri' => "'self'",
     ],

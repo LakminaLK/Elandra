@@ -42,7 +42,7 @@ RUN apt-get update && apt-get install -y \
     npm \
     && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
+# Install PHP extensions (including both MySQL PDO and MongoDB)
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd curl zip
 
 # Install MongoDB extension
@@ -59,7 +59,7 @@ COPY . .
 COPY --from=frontend-builder /app/public/build ./public/build
 
 # Install PHP dependencies (production optimized)
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --ignore-platform-req=ext-mongodb
 
 # Create Laravel storage directories
 RUN mkdir -p storage/logs storage/framework/cache storage/framework/sessions storage/framework/views \

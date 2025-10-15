@@ -7,6 +7,47 @@ use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\Auth\CustomPasswordResetController;
 use App\Http\Controllers\HealthController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Vite;
+
+// Debug route to check asset URLs
+Route::get('/debug-assets', function () {
+    $manifest = json_decode(file_get_contents(public_path('build/manifest.json')), true);
+    $appUrl = config('app.url');
+    
+    return response()->json([
+        'app_url' => $appUrl,
+        'asset_url' => config('app.asset_url'),
+        'request_scheme' => request()->getScheme(),
+        'is_secure' => request()->isSecure(),
+        'manifest' => $manifest,
+        'asset_function_test' => asset('build/assets/app-Dq6SGzrF.css'),
+        'vite_asset' => Vite::asset('resources/css/app.css'),
+        'url_force_scheme' => url('test'),
+    ]);
+});
+
+// Test endpoint for CSS debugging
+Route::get('/css-test', function () {
+    return '
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>CSS Test</title>
+        <style>
+            body { background: #f0f0f0; font-family: Arial; padding: 20px; }
+            .success { color: green; font-size: 24px; font-weight: bold; }
+            .info { background: #e3f2fd; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        </style>
+    </head>
+    <body>
+        <div class="success">✅ CSS Test Working!</div>
+        <div class="info">Server is running properly. Assets should now load without CSP blocking.</div>
+        <a href="/" style="color: blue;">Go to Homepage</a>
+        <br><br>
+        <a href="/debug-assets" style="color: red;">Debug Asset URLs</a>
+    </body>
+    </html>';
+});
 
 // Health check routes
 Route::get('/health', [HealthController::class, 'simpleHealth'])->name('health.simple');
