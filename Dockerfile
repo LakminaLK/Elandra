@@ -70,8 +70,34 @@ RUN echo '<VirtualHost *:80>\n\
 RUN echo 'OK' > /var/www/html/public/health.txt
 RUN echo '<?php echo "OK"; ?>' > /var/www/html/public/healthcheck.php
 
+# Create startup script with migrations
+RUN echo '#!/bin/bash\n\
+echo "Starting Elandra deployment..."\n\
+\n\
+# Wait for database to be ready\n\
+echo "Waiting for MySQL database..."\n\
+until php artisan migrate:status > /dev/null 2>&1; do\n\
+    echo "Database not ready, waiting..."\n\
+    sleep 5\n\
+done\n\
+\n\
+# Run database migrations\n\
+echo "Running database migrations..."\n\
+php artisan migrate --force\n\
+\n\
+# Create storage link\n\
+php artisan storage:link --force || true\n\
+\n\
+# Cache configuration\n\
+php artisan config:cache\n\
+\n\
+# Start Apache\n\
+echo "Starting Apache web server..."\n\
+exec apache2-foreground\n\
+' > /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
+
 # Expose port
 EXPOSE 80
 
-# Start Apache
-CMD ["apache2-foreground"]
+# Start with migration script
+CMD ["/usr/local/bin/start.sh"]
