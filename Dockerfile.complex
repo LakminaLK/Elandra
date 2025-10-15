@@ -1,4 +1,4 @@
-# Multi-stage build for Laravel - SIMPLE VERSION
+# Multi-stage build for Laravel
 # Stage 1: Build frontend assets
 FROM node:18-alpine AS frontend-builder
 
@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy package files
 COPY package.json package-lock.json* ./
 
-# Install Node.js dependencies
+# Install Node.js dependencies (including dev dependencies for build)
 RUN npm ci
 
 # Copy frontend source code
@@ -23,7 +23,7 @@ FROM php:8.2-apache
 # Set working directory
 WORKDIR /var/www/html
 
-# Install dependencies including MongoDB
+# Install minimal dependencies including MongoDB
 RUN apt-get update && apt-get install -y \
     curl \
     libzip-dev \
@@ -43,7 +43,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy application files
 COPY . .
 
-# Copy built frontend assets
+# Copy built frontend assets from frontend-builder stage
 COPY --from=frontend-builder /app/public/build ./public/build
 
 # Install PHP dependencies
@@ -60,14 +60,38 @@ RUN echo '<VirtualHost *:80>\n\
         AllowOverride All\n\
         Require all granted\n\
     </Directory>\n\
+    \n\
+    # Health check endpoint\n\
+    Alias /health /var/www/html/public/health.txt\n\
+    Alias /healthcheck.php /var/www/html/public/healthcheck.php\n\
 </VirtualHost>' > /etc/apache2/sites-available/000-default.conf
 
 # Create health files
 RUN echo 'OK' > /var/www/html/public/health.txt
 RUN echo '<?php echo "OK"; ?>' > /var/www/html/public/healthcheck.php
 
+# Create simplified startup script
+RUN echo '#!/bin/bash\n\
+echo "Starting Elandra..."\n\
+\n\
+# Start Apache in background\n\
+apache2ctl start\n\
+\n\
+# Run migrations in background (non-blocking)\n\
+(\n\
+    echo "Running migrations in background..."\n\
+    sleep 10  # Give Apache time to start\n\
+    php artisan migrate --force || echo "Migration failed, continuing..."\n\
+    php artisan storage:link --force || true\n\
+    echo "Background setup complete"\n\
+) &\n\
+\n\
+# Keep Apache running in foreground\n\
+exec apache2ctl -D FOREGROUND\n\
+' > /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
+
 # Expose port
 EXPOSE 80
 
-# Start Apache directly - simple and reliable
-CMD ["apache2-foreground"]
+# Start with migration script
+CMD ["/usr/local/bin/start.sh"]
