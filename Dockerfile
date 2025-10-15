@@ -4,11 +4,15 @@ FROM php:8.2-apache
 # Set working directory
 WORKDIR /var/www/html
 
-# Install minimal dependencies
+# Install minimal dependencies including MongoDB
 RUN apt-get update && apt-get install -y \
     curl \
     libzip-dev \
+    libssl-dev \
+    pkg-config \
     && docker-php-ext-install pdo_mysql zip \
+    && pecl install mongodb \
+    && docker-php-ext-enable mongodb \
     && rm -rf /var/lib/apt/lists/*
 
 # Enable Apache modules
@@ -21,7 +25,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY . .
 
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --ignore-platform-reqs
+RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --ignore-platform-req=ext-mongodb
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \
