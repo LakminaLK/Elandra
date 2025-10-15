@@ -144,14 +144,6 @@ if (!\App\Models\User::where('email', 'admin@elandra.com')->exists()) {
 }
 "
 
-# Health check
-echo "🏥 Performing health check..."
-if curl -f http://localhost/health >/dev/null 2>&1; then
-    echo "✅ Health check passed"
-else
-    echo "⚠️ Health check endpoint not yet available (this is normal during initial deployment)"
-fi
-
 echo "✅ Railway deployment complete!"
 echo "🌐 Application should be available at: $APP_URL"
 echo "👤 Admin login: admin@elandra.com / admin123"

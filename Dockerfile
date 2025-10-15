@@ -89,9 +89,5 @@ RUN php artisan config:cache || true \
 # Expose port
 EXPOSE 80
 
-# Simple health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost/health || exit 1
-
-# Start supervisor
+# Start supervisor (Railway will handle healthcheck)
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

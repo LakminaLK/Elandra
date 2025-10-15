@@ -50,10 +50,17 @@ Route::get('/css-test', function () {
 
 // Health check routes - Simple OK response for Railway
 Route::get('/health', function() {
-    return response('OK', 200);
+    return response('OK', 200)->header('Content-Type', 'text/plain');
 })->name('health.simple');
 
-Route::get('/health/detailed', [HealthController::class, 'healthCheck'])->name('health.detailed');
+// Alternative health endpoints for Railway
+Route::get('/healthz', function() {
+    return response('OK', 200)->header('Content-Type', 'text/plain');
+});
+
+Route::get('/ping', function() {
+    return response('pong', 200)->header('Content-Type', 'text/plain');
+});
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
