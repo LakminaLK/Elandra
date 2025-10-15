@@ -73,10 +73,7 @@ RUN chown -R www-data:www-data /var/www/html \
 
 # Copy nginx configuration
 COPY docker/nginx.conf /etc/nginx/nginx.conf
-COPY docker/default.conf /etc/nginx/sites-available/default
-
-# Copy supervisor configuration
-COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/simple.conf /etc/nginx/sites-available/default
 
 # Create nginx and php-fpm log directories
 RUN mkdir -p /var/log/nginx /var/log/php-fpm
@@ -87,22 +84,17 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/bootstrap/cache \
     && chmod -R 755 /var/www/html/public
 
-# Create a simple startup script
+# Create a minimal startup script that always works
 RUN echo '#!/bin/bash\n\
-set -e\n\
-echo "Starting Elandra application..."\n\
-\n\
-# Basic Laravel setup\n\
-php artisan config:clear\n\
-php artisan cache:clear\n\
-php artisan storage:link --force || true\n\
-\n\
-echo "Services starting..."\n\
-exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf\n\
+echo "Starting PHP-FPM..."\n\
+php-fpm --daemonize --fpm-config /usr/local/etc/php-fpm.conf\n\
+sleep 2\n\
+echo "Starting Nginx..."\n\
+nginx -g "daemon off;"\n\
 ' > /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
 
 # Expose port
 EXPOSE 80
 
-# Start with the simplified script
+# Start with minimal script
 CMD ["/usr/local/bin/start.sh"]
