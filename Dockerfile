@@ -1,4 +1,23 @@
-# Minimal Laravel Docker setup for Railway
+# Multi-stage build for Laravel
+# Stage 1: Build frontend assets
+FROM node:18-alpine AS frontend-builder
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json package-lock.json* ./
+
+# Install Node.js dependencies
+RUN npm ci --only=production
+
+# Copy frontend source code
+COPY resources/ ./resources/
+COPY vite.config.js tailwind.config.js postcss.config.js ./
+
+# Build frontend assets
+RUN npm run build
+
+# Stage 2: PHP Application
 FROM php:8.2-apache
 
 # Set working directory
@@ -23,6 +42,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy application files
 COPY . .
+
+# Copy built frontend assets from frontend-builder stage
+COPY --from=frontend-builder /app/public/build ./public/build
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --ignore-platform-req=ext-mongodb
