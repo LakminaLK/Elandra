@@ -70,29 +70,67 @@ RUN echo '<VirtualHost *:80>\n\
 RUN echo 'OK' > /var/www/html/public/health.txt
 RUN echo '<?php echo "OK"; ?>' > /var/www/html/public/healthcheck.php
 
-# Create startup script with migrations
+# Create startup script with better error handling and logging
 RUN echo '#!/bin/bash\n\
+set -e\n\
 echo "Starting Elandra deployment..."\n\
 \n\
-# Wait for database to be ready\n\
-echo "Waiting for MySQL database..."\n\
-until php artisan migrate:status > /dev/null 2>&1; do\n\
-    echo "Database not ready, waiting..."\n\
-    sleep 5\n\
+# Show environment info\n\
+echo "Environment: $APP_ENV"\n\
+echo "Database Host: $DB_HOST"\n\
+echo "Database Name: $DB_DATABASE"\n\
+\n\
+# Clear caches first\n\
+echo "Clearing Laravel caches..."\n\
+php artisan config:clear\n\
+php artisan cache:clear\n\
+php artisan view:clear\n\
+\n\
+# Wait for database with better checking\n\
+echo "Waiting for MySQL database connection..."\n\
+max_attempts=30\n\
+attempt=1\n\
+\n\
+while [ $attempt -le $max_attempts ]; do\n\
+    if php artisan db:show --database=mysql > /dev/null 2>&1; then\n\
+        echo "✅ MySQL database connected successfully"\n\
+        break\n\
+    else\n\
+        echo "⏳ Attempt $attempt/$max_attempts: Database not ready, waiting 5 seconds..."\n\
+        sleep 5\n\
+        attempt=$((attempt + 1))\n\
+    fi\n\
 done\n\
 \n\
-# Run database migrations\n\
+if [ $attempt -gt $max_attempts ]; then\n\
+    echo "❌ Failed to connect to database after $max_attempts attempts"\n\
+    echo "Database connection details:"\n\
+    php artisan config:show database\n\
+    exit 1\n\
+fi\n\
+\n\
+# Run database migrations with verbose output\n\
 echo "Running database migrations..."\n\
-php artisan migrate --force\n\
+php artisan migrate --force --verbose\n\
+\n\
+# Show migration status\n\
+echo "Checking migration status:"\n\
+php artisan migrate:status\n\
 \n\
 # Create storage link\n\
+echo "Creating storage link..."\n\
 php artisan storage:link --force || true\n\
 \n\
-# Cache configuration\n\
+# Cache configuration for production\n\
+echo "Caching Laravel configuration..."\n\
 php artisan config:cache\n\
 \n\
+# Show final database tables\n\
+echo "Final database tables:"\n\
+php artisan db:table --database=mysql || true\n\
+\n\
 # Start Apache\n\
-echo "Starting Apache web server..."\n\
+echo "🚀 Starting Apache web server..."\n\
 exec apache2-foreground\n\
 ' > /usr/local/bin/start.sh && chmod +x /usr/local/bin/start.sh
 
